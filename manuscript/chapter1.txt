@@ -1,3 +1,15 @@
-#Thinking Functionally
+#Thinking Functionally in PHP?
 
-Under Construction
+##Introduction
+The PHP community has come a long way since the early starts of PHP mainly as a procedular, imperative language. Now, since PHP 5, you've become an Object-Oriented (OO) PHP developer. You take advantage of classes, abstract classes, and interfaces to properly implement the guiding OO principles called polymorphism, inheritance, and encapsulation. All of this comes into play when building rich domain models utilizing all of the coolest design patterns. Have you been able to reduce the development effort of building large PHP applications? Certainly. But is complexity still an issue and bugs frequent? Is your application easy to unit test? How reusable is your code?  
+
+The PHP applications of yesterday are no match for the complex, dynamic, and distributed applications of today. It's commonplace now that our users demand that their applications run in cloud environments, integrated with a network of third-party services, and expect SLAs to hold at above 99%. It's always that balanc of low cost and return of investment against our desire to build robust, maintainable architectures. 
+
+Naturally, as developers, we gravitate towards MVC frameworks that help us create an extensible and clean system design with scaffolding and plubming for routing, templates, persistence models, services, dependency injection (DI), and built-in integration with database servers. Despite all of this, our business logic code is still becoming hard to reason about, and this is becasue we still use shared variables, mutable state, monolithic functions, and others. These seamingly small concerns, which we're taught to be bad practices but do them anyway, are what functional programming encourages and challenges you to pay close attention to.  
+
+Object-oriented design certainly moves the needle in the right direction, but we need more. Perhaps you’ve been hearin about functional programming (FP) in recent years. Language manufacturers are placing functional artifacts into their languages. Hence, Java, JavaScript, F#, C#, Scala, Python, Ruby, all have some form of functional features. Moreover, the industry is realizing that writing code functionally is opening the door to very clean and extensible architectures. Companies like Netflix have bet their success on reactive systems, which are built heavily on functional ideas. 
+
+If you didn't know that PHP also supports writing functional code, then you’ve picked up the right book. Functional programming (FP) is the programming paradigm you need. While based on very simple concepts, FP requires a shift in the way you think about a problem. FP isn’t a new tool or an API, but a different approach to problem solving that will become intuitive once you’ve understood its basic principles and how they can be used against the most complex tasks. 
+But before we can get into all of this, you need to learn why thinking functionally is important and how it can help you tackle the complexities of JavaScript programs.
+##Hello FP
+TBD
