@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.48.5 r10040"
    sodipodi:docname="title_page.svg"
-   inkscape:export-filename="/Users/luijar/Dropbox/Writing/fp-php/manuscript/images/title_page.jpg.png"
+   inkscape:export-filename="/Users/luijar/Dropbox/Writing/fp-php/manuscript/images/title_page.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -29,8 +29,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.17727627"
-     inkscape:cx="1471.2992"
-     inkscape:cy="1542.6538"
+     inkscape:cx="568.75311"
+     inkscape:cy="865.7442"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -58,21 +58,21 @@
      transform="translate(0,2247.6378)">
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="1068.1111"
-       y="-1485.626"
+       style="font-size:40px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:AppleGothic Bold"
+       x="1073.752"
+       y="-1703.1079"
        id="text3004"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3006"
-         x="1091.1736"
-         y="-1485.626"
-         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:AppleGothic;-inkscape-font-specification:AppleGothic">Functional Programming </tspan><tspan
+         x="1096.8145"
+         y="-1703.1079"
+         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:AppleGothic;-inkscape-font-specification:AppleGothic Bold">Functional Programming </tspan><tspan
          sodipodi:role="line"
-         x="1068.1111"
-         y="-1305.626"
+         x="1073.752"
+         y="-1523.1079"
          id="tspan3008"
-         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:AppleGothic;-inkscape-font-specification:AppleGothic">in PHP</tspan></text>
+         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;font-family:AppleGothic;-inkscape-font-specification:AppleGothic Bold">in PHP</tspan></text>
     <image
        y="-1214.2437"
        x="131.71817"
@@ -1225,13 +1225,13 @@ ABRRRQAUUUUAFFFFABRRRQB//9k=
     <text
        xml:space="preserve"
        style="font-size:72px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="1070.8459"
-       y="434.79822"
+       x="1076.4868"
+       y="733.71655"
        id="text3004-0"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="1070.8459"
-         y="434.79822"
+         x="1076.4868"
+         y="733.71655"
          id="tspan3008-8"
          style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:AppleGothic;-inkscape-font-specification:AppleGothic">Luis Atencio</tspan></text>
     <text
@@ -1248,5 +1248,34 @@ ABRRRQAUUUUAFFFFABRRRQB//9k=
          x="1027.3435"
          y="-560.60193"
          style="font-size:449.33938599px;fill:#f1f1f1;fill-opacity:1">λ</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3940"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion3942"><rect
+           id="rect3944"
+           width="1099.978"
+           height="287.68655"
+           x="225.63652"
+           y="135.44783" /></flowRegion><flowPara
+         id="flowPara3946"></flowPara></flowRoot>    <rect
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3967"
+       width="1692.2739"
+       height="242.55925"
+       x="225.63652"
+       y="101.60235"
+       transform="translate(0,-2247.6378)"
+       rx="11.615279"
+       ry="11.615279" />
+    <rect
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3967-8"
+       width="1692.2739"
+       height="242.55925"
+       x="496.96399"
+       y="765.90521"
+       rx="11.615279"
+       ry="11.615279" />
   </g>
 </svg>
