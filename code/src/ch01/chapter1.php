@@ -54,4 +54,8 @@
 	$bytesWritten = $writeFile('Hello FP with Curry');
 	println('Wrote: '. $bytesWritten. ' bytes');
 
+// Excersise 5
+	$run = Combinators::compose($writeFile, $addExclamation, $repeat3, $concat2);
 
+	$bytesWritten = $run('Hello', 'FP!');
+	println('Wrote '. $bytesWritten. ' bytes');

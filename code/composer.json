@@ -1,0 +1,16 @@
+{
+	"name": "luisat/fp-book",
+	"description": "Code for Functional Programming in PHP",		
+	"type": "project",
+	"require": {
+		"lstrojny/functional-php": "1.0.0",
+		"cypresslab/php-curry":"*"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "5.0.8",
+		"phpspec/phpspec": "~2.1"
+	},		
+	"config": {
+		"preferred-install": "dist"
+	}    
+}
