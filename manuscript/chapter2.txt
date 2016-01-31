@@ -1,3 +1,7 @@
 #Higher-Order PHP
 
 Under Construction
+
+
+PHP 5.3 closures
+PHP 5.4 type-hint callable
