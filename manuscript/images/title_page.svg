@@ -15,15 +15,18 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="title_page.svg">
+   sodipodi:docname="title_page.svg"
+   inkscape:export-filename="/Users/luijar/Dropbox/Writing/fp-php/manuscript/images/title_page.jpg.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.17727627"
      inkscape:cx="1471.2992"
@@ -33,8 +36,8 @@
      showgrid="false"
      inkscape:window-width="1280"
      inkscape:window-height="743"
-     inkscape:window-x="118"
-     inkscape:window-y="67"
+     inkscape:window-x="313"
+     inkscape:window-y="148"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
@@ -56,20 +59,20 @@
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="1268.4961"
-       y="-1758.7489"
+       x="1068.1111"
+       y="-1485.626"
        id="text3004"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3006"
-         x="1290.7148"
-         y="-1758.7489"
-         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Futura;-inkscape-font-specification:Futura Medium">Functional Programming </tspan><tspan
+         x="1091.1736"
+         y="-1485.626"
+         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:AppleGothic;-inkscape-font-specification:AppleGothic">Functional Programming </tspan><tspan
          sodipodi:role="line"
-         x="1268.4961"
-         y="-1578.7489"
+         x="1068.1111"
+         y="-1305.626"
          id="tspan3008"
-         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Futura;-inkscape-font-specification:Futura Medium">in PHP</tspan></text>
+         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:AppleGothic;-inkscape-font-specification:AppleGothic">in PHP</tspan></text>
     <image
        y="-1214.2437"
        x="131.71817"
@@ -1222,15 +1225,15 @@ ABRRRQAUUUUAFFFFABRRRQB//9k=
     <text
        xml:space="preserve"
        style="font-size:72px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="427.84634"
-       y="779.18188"
+       x="1070.8459"
+       y="434.79822"
        id="text3004-0"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="427.84634"
-         y="779.18188"
+         x="1070.8459"
+         y="434.79822"
          id="tspan3008-8"
-         style="font-size:72px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Futura;-inkscape-font-specification:Futura Medium">By Luis Atencio</tspan></text>
+         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;font-family:AppleGothic;-inkscape-font-specification:AppleGothic">Luis Atencio</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:124.81651306px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
