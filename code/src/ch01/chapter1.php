@@ -59,3 +59,29 @@
 
 	$bytesWritten = $run('Hello', 'FP!');
 	println('Wrote '. $bytesWritten. ' bytes');
+
+// Exercise 6
+	$array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+	for($i = 0; $i < count($array); $i++) {
+	   $array[$i] = pow($array[$i], 2);
+	}
+	println(print_r($array, true)); //-> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+
+// Exercise 7
+	$array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+	
+	$square = function ($num) {
+		return pow($num, 2);
+	};
+	
+	$result = array_map($square, $array);
+	
+	println(print_r($result, true)); //-> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+
+
+
+
+
+
