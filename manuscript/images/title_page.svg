@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.20363696"
-     inkscape:cx="922.37724"
-     inkscape:cy="1397.7626"
+     inkscape:zoom="0.12183786"
+     inkscape:cx="1297.3772"
+     inkscape:cy="1772.7626"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -69,7 +69,7 @@
            y="135.44783" /></flowRegion><flowPara
          id="flowPara3946"></flowPara></flowRoot>    <image
        y="-2252.7295"
-       x="-2.5768635"
+       x="0"
        id="image4049"
        xlink:href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
 HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
@@ -2779,13 +2779,13 @@ tp/8OaP4c0AM2Zo208UuM5oAiAIDU3FTHnNNPGOKAIsZP3aXaPSpMBjSbB70AQlefakAJqUDJ29q
 aflYKOhoATbxRt6e1SbQMHvQoyfrQB//2Q==
 "
        height="2172.5645"
-       width="2549.2056" />
+       width="2561.7056" />
     <rect
-       style="fill:#1b1b1b;fill-opacity:1;stroke:#000000;stroke-width:4.98569058999999992;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.97833939999999997;stroke-dasharray:none;stroke-dashoffset:0"
+       style="fill:#1b1b1b;fill-opacity:1;stroke:#000000;stroke-width:5.00033617;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect4081"
-       width="2548.2295"
+       width="2563.2224"
        height="1107.5103"
-       x="4.867455"
+       x="2.5001681"
        y="-47.615826"
        rx="11.615279"
        ry="0" />
@@ -2815,20 +2815,20 @@ aflYKOhoATbxRt6e1SbQMHvQoyfrQB//2Q==
          style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:AppleGothic;-inkscape-font-specification:AppleGothic">Luis Atencio</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#757575;stroke-width:4.50000000000000000;stroke-miterlimit:4;stroke-opacity:0.97833937000000004;stroke-dasharray:none;font-family:Sans;-inkscape-font-specification:AppleGothic Bold;"
-       x="1300.7816"
-       y="-433.99551"
+       style="font-size:40px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#757575;stroke-width:4.5;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;font-family:Sans;-inkscape-font-specification:AppleGothic Bold"
+       x="1269.6562"
+       y="-636.09875"
        id="text3004"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3006"
-         x="1324.8285"
-         y="-433.99551"
-         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;stroke:#757575;stroke-width:4.50000000000000000;stroke-miterlimit:4;stroke-opacity:0.97833937;stroke-dasharray:none;font-family:Arial Black;-inkscape-font-specification:'Arial Black,'">Functional Programming </tspan><tspan
+         x="1293.7031"
+         y="-636.09875"
+         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;stroke:#757575;stroke-width:4.5;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;font-family:Arial Black;-inkscape-font-specification:'Arial Black,'">Functional Programming </tspan><tspan
          sodipodi:role="line"
-         x="1300.7816"
-         y="-253.99551"
+         x="1269.6562"
+         y="-456.09872"
          id="tspan3008"
-         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;stroke:#757575;stroke-width:4.50000000000000000;stroke-miterlimit:4;stroke-opacity:0.97833937;stroke-dasharray:none;font-family:Arial Black;-inkscape-font-specification:'Arial Black,'">in PHP</tspan></text>
+         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;stroke:#757575;stroke-width:4.5;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;font-family:Arial Black;-inkscape-font-specification:'Arial Black,'">in PHP</tspan></text>
   </g>
 </svg>
