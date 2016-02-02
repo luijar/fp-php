@@ -103,7 +103,7 @@ strtolower(htmlspecialchars('</ Hello FP >')); //-> &lt;/ hello fp &gt;~~~I a
 $c(); //-> 16
 ~~~So, what's the use for this pattern? Earlier I mentioned that throwing exceptions, or for that matter, the imperative try/catch mechanism has side effects. Arguably, try/catch is also not very declarative. Containerizing values is an important design pattern in FP because it allows you to consolidate the logic of applying a function chain (sequence) of changes to some value immutably and side effect free. Later on, we'll see how this leads into the topic of *Monads*. 
 This can be used to implement error handling. Consider this scenario
-~~~$c = Container::of([1,2,3])->map(@array_reverse);
+~~~$c = Container::of([1,2,3])->map(array_reverse);
 print_r($c()) //-> [3, 2, 1]~~~
 
 But if instead of a valid array, a null value was passed in, you will see: 
@@ -121,6 +121,6 @@ class SafeContainer extends Container {
    }	
 }	~~~Now I don't have to worry about the error checking to permeate all of my business logic, I've consolidated it all in one place
 ~~~
-$c = SafeContainer::of(null)->map(@array_reverse);
+$c = SafeContainer::of(null)->map(array_reverse);
 print_r($c()); //-> Nothing~~~The best part about this is that your function chain look exactly the same, you can continue to map as many functions as you need and any errors will be propagated through the entire chain. ##So, what is functional programming?With all of this so far, we can arrive at the following definition of functional programming: 
 "***Functional programming refers to the declarative evaluation of pure functions to create immutable programs by avoiding externally observable side effects.***"Hope you've enjoyed this brief introduction of some of the topics covered in this book. In the next chapters we'll learn what enables PHP to be used functionally. In particular, you'll learn about higher-order, first-class functions, and closures, and some practical examples of using each technique. This will set the stage for developing data flows using PHP arrays. so stay tuned!
