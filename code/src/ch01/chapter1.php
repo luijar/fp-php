@@ -79,8 +79,29 @@
 	
 	println(print_r($result, true)); //-> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
 
+// Exercise 8
+	class Container {
+		private $_value;
 
+		function __construct($value) {			
+			$this->_value = $value;				
+		}
 
+		public static function of($val) {			
+			return new static($val);	
+		}
+		
+		public function map(callable $f) {			
+			return static::of(call_user_func($f, $this->_value));		
+		}
+
+		public function __toString() {
+        	return "Container[ {$this->_value} ]";
+    	}
+	}
+
+	$c = Container::of('</ Hello FP >')->map(@htmlspecialchars)->map(@strtolower);
+	println($c);
 
 
 
