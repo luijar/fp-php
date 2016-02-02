@@ -52,7 +52,6 @@ Side effects can be very ubiquitous. At a theoretical level, a side effect could
 For instance, I can easily refactor `increment` to declare that it requires you provide the current counter
 
 ~~~
-/** @return int */
 function increment($counter) {
    return ++$counter;    }
 ~~~
