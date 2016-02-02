@@ -81,9 +81,9 @@
 
 // Exercise 8
 	class Container {
-		private $_value;
+		protected $_value;
 
-		function __construct($value) {			
+		private function __construct($value) {			
 			$this->_value = $value;				
 		}
 
@@ -98,11 +98,38 @@
 		public function __toString() {
         	return "Container[ {$this->_value} ]";
     	}
+
+    	public function __invoke() {
+        	return empty($this->_value) ? 'Nothing': $this->_value;
+    	}
 	}
 
 	$c = Container::of('</ Hello FP >')->map(@htmlspecialchars)->map(@strtolower);
 	println($c);
+	println($c());
+
+	$c = Container::of('Hello FP')->map($repeat3)->map(@strlen);
+
+	$c = Container::of([1,2,3])->map(@array_reverse);
+	println(print_r($c(), true));
+
+	$c = Container::of(null)->map(@array_reverse);
+	println(print_r($c(), true));
 
 
+// Exercise 9
+	class SafeContainer extends Container {
+		
+		// Performs null checks
+		public function map(callable $f) {
+		 	if(!empty($this->_value)) {
+		 		return static::of(call_user_func($f, $this->_value));			
+		 	}
+		 	return static::of(null); 			
+		}	
+	}	
+
+	$c = SafeContainer::of(null)->map(@array_reverse);
+	println(print_r($c(), true));
 
 
