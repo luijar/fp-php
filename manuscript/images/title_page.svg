@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.28"
-     inkscape:cx="1243.0529"
-     inkscape:cy="502.13276"
+     inkscape:zoom="0.089347764"
+     inkscape:cx="-183.9554"
+     inkscape:cy="2086.4252"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -47,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -109,21 +109,16 @@
          style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-opacity:1;font-family:AppleGothic;-inkscape-font-specification:AppleGothic">Luis Atencio</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#757575;stroke-width:4.5;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;font-family:Sans;-inkscape-font-specification:AppleGothic Bold"
-       x="1269.6562"
-       y="-636.09875"
+       style="font-size:200px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#757575;stroke-width:4.5;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;font-family:Sans;-inkscape-font-specification:AppleGothic Bold"
+       x="1271.875"
+       y="-1152.8876"
        id="text3004"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         id="tspan3006"
-         x="1293.7031"
-         y="-636.09875"
-         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;stroke:#757575;stroke-width:4.5;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;font-family:Arial Black;-inkscape-font-specification:'Arial Black,'">Functional Programming </tspan><tspan
-         sodipodi:role="line"
-         x="1269.6562"
-         y="-456.09872"
+         x="1271.875"
+         y="-1152.8876"
          id="tspan3008"
-         style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;stroke:#757575;stroke-width:4.5;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;font-family:Arial Black;-inkscape-font-specification:'Arial Black,'">in PHP</tspan></text>
+         style="font-size:200px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;stroke:#757575;stroke-width:4.5;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;font-family:Arial Black;-inkscape-font-specification:'Arial Black,'">Functional PHP</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.9783394;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect4495"
