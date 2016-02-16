@@ -47,5 +47,12 @@
 
 	println(apply2($divide)(5, 5));	
 	
-	apply2($divide)(5, 0);
+	//apply2($divide)(5, 0);
+
+	$safeDivide = function ($a, $b) {   
+	   return empty($b) ? NAN : $a / $b;
+	};
+
+	println(apply2($safeDivide)(5, 0));
+
 

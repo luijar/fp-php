@@ -45,7 +45,7 @@ $helloWith = concatWith('Hello');
 $helloWith('World'); //-> 'Hello World'
 ~~~
 
-###As function parameter
+###As a function parameter
 Supplying functions as parameters allows you to administer specialized behavior on top of another function. Suppose I create a simple function that takes a *callable* (itself a function) and applies it onto its other parameters:
 
 ~~~
@@ -95,9 +95,22 @@ $adder(5,5); //-> 10
 $divider(5,5); //-> 1
 ~~~
 
-I mentioned earlier that higher-order functions allow you supply specialized behavior. Let's see that in action. If I use `apply($divide)(5, 0)`, a division by zero, the PHP runtime will fire a division by zero warning: 
+I mentioned earlier that higher-order functions allow you to supply specialized behavior via function arguments. Let's see this in action. What would happen if I call `apply($divide)(5, 0)`? Correct, a division by zero error:
 
 ~~~
-Warning: Division by zero
+Warning: Division by zero in .../code/src/ch02/ch02.php ...
 ~~~
+
+To fix this, I'll create a function called `safeDivide` that  extra null-check logic. This function is a lot more resilient, returning PHP's NAN constant back to the caller.
+
+~~~
+$safeDivide = function ($a, $b) {   
+   return empty($b) ? NAN : $a / $b;
+};
+
+apply($safeDivide)(5, 0); //-> NAN
+~~~
+
+
+
 
