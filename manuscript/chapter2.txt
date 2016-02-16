@@ -1,3 +1,51 @@
-#Higher-Order PHP
+#Higher-order PHP
 
-Under Construction
+I mentioned in chapter 1 that functional programming is not a new framework, library, or design pattern. It's a way of thinking that offers an alternative to the way in which you design your code. However, paradigms by themselves are just abstract concepts that need the right host language to become a reality. And, yes! PHP is that language. In this chapter, I'll take a look at two important features of PHP: higher-order functions and closures. Both of these are instrumental in building all of the techniques you'll learn about in this book.
+
+##PHP's higher-order functions 
+A higher-order function is defined as one that can accept other functions as arguments or be returned from another function. This is in direct relationship with another term you might've heard before, that has *first-class functions*. Both are intimately related, as the ability of a language artifact to be passed in as an argument or returned from a functions hinges on it being considered an object. This also means, of course, that functions can be assigned to variables. Let's take a look at a few examples: 
+
+Functions in PHP can be manipulated just like objects. In fact, if you were to check the type of a function, you'll find out that they are instances of the class [`Closure`](http://php.net/manual/en/class.closure.php):
+
+~~~
+var_dump(function () { }); 
+
+//-> class Closure#1 (0) {
+     }
+~~~
+
+###Assign a function to a variable
+This means that you should be able to treat a function just like any other type of object. Which means they can be assigned to variables. Consider a simple string concatenation function:
+ 
+~~~
+$concat2 = function ($s1, $s2) {
+   return $s1. ' '. $s2;
+};
+
+$concat2('Hello', 'World');  //-> 'Hello World'
+~~~
+
+Behind the scenes this code takes the anonymous function (RHS) and assigns it to the variable `$concat2` (LHS). Alternatively, you can check for the presence of a function varible using [`is_callable()`](http://php.net/manual/en/function.is-callable.php):
+
+~~~
+is_callable($concat2) // 1
+~~~ 
+
+###Returned from a function
+Functions can also be returned from another function. This is an extremely useful technique for creating families of functions. It's also the main part of implementing function currying, which you'll learn about in later chapters. Consider a simple `concatWith` function:
+
+~~~
+function concatWith($a) {
+   return function ($b) use ($a) {
+      return $a . $b;	
+   };
+}
+
+$helloWith = concatWith('Hello');
+$helloWith('World'); //-> 'Hello World'
+~~~
+
+###As function parameter
+
+
+

@@ -38,7 +38,20 @@ array_map($square, $array);  //-> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]~~~The 
 * It depends only on the input provided and not on any hidden or external state that may change during its evaluation or between calls.* It doesn’t inflict changes beyond their scope, like modifying a global object or a parameter passed by reference, after its run.
 Intuitively, any function that does not meet these requirements would be qualified as “impure.” Programming with immutability can feel rather strange at first. After all, the whole point of imperative design, which is what we’re accustomed to, is to declare that variables are to mutate from one statement to the next (they are “variable” after all). PHP doesn't make any distinctions between *values* (immutable variables) and standard variables--they're all declared with a "$" dollar sign. This is a very natural thing for us to do. Consider the following function~~~$counter = 0; // resides somewhere in the global space (possibly in a different script)                    
 
-... function increment() {   GLOBAL $counter;   return ++$counter;    }~~~While I can't use language constructs to enforce that data be stored as constant, final, or immutable variables, once thing we can do is stop using global variables and the `GLOBAL` mechanism in PHP. A function like this is impure as it reads/modifies an external variable `$counter`, which is not local to the function’s scope (it could actually live in a complete different file). Generally, functions have side effects when reading from or writing to external resources. 
+... function increment() {   GLOBAL $counter;   return ++$counter;    }~~~You can also encouter side effects by accessing instance state as well: 
+
+~~~class Counter {
+   private $_counter;   
+   public function __construct($init) {
+      $this->_counter = $init;
+   }   
+   
+   ...
+   public function increment() {
+      return ++$this->_counter;
+   }}
+With only limited support for constant primitive values in classes and interfaces (via the `const` keyword), PHP does nothing to enforce that data be stored immutably (unlike Scala, F#, and others). However, with a bit of discipline we can go a very long way. One thing we can do is stop using global variables and the `GLOBAL` mechanism in PHP. This is not only bad practice from a functional point of view, but also a bit frowned upon in modern PHP applications. A function like `increment` is impure as it reads/modifies an external variable `$counter`, which is not local to the function’s scope (it could actually live in a complete different file). This also applies to instance methods, but I'll defer how to get around these side effects to the next chapter. 
+Generally, functions have side effects when reading from or writing to external resources. 
 ![Increment function with side effects](images/side_effect.png)Side effects are also a bad design because it causes your functions to be *temporally coupled* or dependent, which means the execution of one can determine the outcome of the next. In functional programming, functions are reusable artifacts that can be evaluated in any order and continue to yield correct results. 
 
 ![Temporal coupling](images/side_effect2.png)
