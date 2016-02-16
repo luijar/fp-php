@@ -104,6 +104,10 @@ Warning: Division by zero in .../code/src/ch02/ch02.php ...
 To fix this, I'll create a function called `safeDivide` that  extra null-check logic. This function is a lot more resilient, returning PHP's NAN constant back to the caller.
 
 ~~~
+/**
+ * Divide two numbers
+ * @return int | NAN
+ */
 $safeDivide = function ($a, $b) {   
    return empty($b) ? NAN : $a / $b;
 };
@@ -111,6 +115,39 @@ $safeDivide = function ($a, $b) {
 apply($safeDivide)(5, 0); //-> NAN
 ~~~
 
+The other reason why I prefer this approach is that checking for NAN requires a lot less effort and it's much cleaner than having to try and catch exceptions:
 
+~~~
+try {
+   $result = apply($safeDivide)(5, 0);
+   ...
+   return $result;   
+}
+catch(Exception $e) {
+    Log::error($e->getMessage());
+}
+~~~
+
+This is a much better API design: 
+
+~~~
+$result = apply($safeDivide)(5, 0);
+if(!is_nan($result)) {
+   ...
+   return $result;
+}
+else {
+   Log::warning('Math error ocurred! Division by zero!');
+}
+~~~
+
+This approach avoids throwing the exception altogether which is not only a side effect, as it causes the program stack to unwind, but also it respects the *Locality Principle* of design. In particular, it obeys *spatial locality*, which states that related statements that should be executed sequentially shall be placed near each other.  
+
+To recap, this is all possible because PHP functions (including anonymous functions), as of PHP 5.3 are actually `Closure` instances behind the scenes. Before this version, this fact was just considered a design decision, but now you can reliably take advantage of this. In fact, because functions are true instances, as of PHP 5.4 you can actually invoke methods on them which gives you more control of the anonymous function after it's been created (as you might expect, closure instances all implement the magic method `__invoke()`, which is important for consistency reasons). 
+
+http://php.net/manual/en/class.closure.php
+
+
+CONTAINER
 
 

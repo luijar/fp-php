@@ -55,4 +55,6 @@
 
 	println(apply2($safeDivide)(5, 0));
 
+	println('Is NAN: '. is_nan(apply2($safeDivide)(5, 0)));
+
 
