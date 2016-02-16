@@ -46,6 +46,58 @@ $helloWith('World'); //-> 'Hello World'
 ~~~
 
 ###As function parameter
+Supplying functions as parameters allows you to administer specialized behavior on top of another function. Suppose I create a simple function that takes a *callable* (itself a function) and applies it onto its other parameters:
 
+~~~
+function apply(callable $operator, $a, $b) {
+   return $operator($a, $b);
+}
+~~~
 
+Through this *function argument*, I can inject any behavior I want:
+
+~~~
+$add = function ($a, $b) {
+   return $a + $b;
+};
+
+$divide = function ($a, $b) {
+   return $a / $b;
+};
+
+apply($add, 5, 5); //-> 10
+
+apply($divide, 5, 5); //-> 10	
+~~~
+
+Consider a version of apply that's a bit more useful and expressive: 
+
+~~~
+function apply(callable $operator) {
+   return function($a, $b) use ($operator) {
+      return $operator($a, $b);
+   };
+}
+~~~
+
+Also, this code makes it very explicit what it's purpose is and I can use to derive other types of functions from it:
+
+~~~
+apply($add)(5, 5); //-> 10
+
+apply($divide)(5, 5); //-> 1
+
+// New function adder
+$adder = apply($add);
+$divider = apply($divide);
+
+$adder(5,5); //-> 10
+$divider(5,5); //-> 1
+~~~
+
+I mentioned earlier that higher-order functions allow you supply specialized behavior. Let's see that in action. If I use `apply($divide)(5, 0)`, a division by zero, the PHP runtime will fire a division by zero warning: 
+
+~~~
+Warning: Division by zero
+~~~
 
