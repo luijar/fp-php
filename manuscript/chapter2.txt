@@ -164,8 +164,14 @@ class Closure {
 ##Closures
 TBD
 
-##Liskov Substitution Principle
+##Become a SOLID functional developer
 TBD
+###Singularity
+TBD
+
+###Liskov Substitution Principle
+TBD
+
 
 ##What about our objects?
 
