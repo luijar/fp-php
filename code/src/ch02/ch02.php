@@ -57,4 +57,6 @@
 
 	println('Is NAN: '. is_nan(apply2($safeDivide)(5, 0)));
 
+	println('1 + NAN' . 1 + NAN);
+
 

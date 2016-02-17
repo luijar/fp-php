@@ -157,7 +157,23 @@ class Closure {
 }
 ~~~
 
-##Back to containers
+##Using containers improve your APIs
+Earlier you learned that returning NAN in the event that `divide` was called with a zero denominator led to a better API design because it freed your users from having to wrap their code in try/catch blocks. This is always a good thing  because exceptions should be thrown only when there's no recovery path. However, we can do better. Working with numbers and NAN doesn't really get you anywhere; for example, adding anything to NAN (ex. `1 + NAN`) returns NAN, and rightfully so. So, instead of burdening your users to place `is_nan` checks everywhere, why not consolidate this logic in one place. 
+
+In this section, I want to bring back the concept of containers from chapter 1 and mix it with using higher-order functions. Recall that I can use containers to wrap any value and transform it in an immutable way (i.e. as the value inside the container changes, new containers are created keeping the original intact). Here's an example:
+
+~~~$c = Container::of('</ Hello FP >')->map(htmlspecialchars)->map(strtolower);
+//-> Container[ &lt;/ hello fp &gt; ]
+~~~
+
+~~~
+class NanContainer {
+   
+			
+}
+~~
+
+
 
 
 
