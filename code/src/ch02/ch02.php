@@ -1,9 +1,5 @@
 <?php
-
-// helpers
-	function println($str) {
-		print "\n${str}\n";
-	}
+include_once '../ch01/ch01.php';
 
 // Chapter 02
 	var_dump(function() { });
@@ -59,4 +55,32 @@
 
 	println('1 + NAN' . 1 + NAN);
 
+	class SafeNumber extends Container {
+		
+		public function map(callable $f) {					
+			if(!isset($this->_value) || is_nan($this->_value)) {
+				return static::of(); // empty container				
+			}
+			else {
+				return static::of(call_user_func($f, $this->_value));			
+			}			
+		}
+	}
+
+
+	function safeDivide2($a, $b) {   
+	   return SafeNumber::of(empty($b) ? NAN : $a / $b);
+	}
+
+	$square = function ($a) {
+		return $a * $a;
+	};
+
+	$increment = function ($a) {
+		return $a + 1;
+	};
+
+	println(apply2(@safeDivide2)(5, 1)->map($square)->map($increment));
+
+	println(apply2(@safeDivide2)(5, 0)->map($square)->map($increment));
 

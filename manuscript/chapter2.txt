@@ -104,12 +104,12 @@ To fix this, I'll create a function called `safeDivide` that  extra null-check l
 
 ~~~
 /**
- * Divide two numbers
+ * Divide two numbers 
  * @return int | NAN
  */
-$safeDivide = function ($a, $b) {   
+function safeDivide($a, $b) {   
    return empty($b) ? NAN : $a / $b;
-};
+}
 
 apply($safeDivide)(5, 0); //-> NAN
 ~~~
@@ -166,16 +166,51 @@ In this section, I want to bring back the concept of containers from chapter 1 a
 //-> Container[ &lt;/ hello fp &gt; ]
 ~~~
 
+Since PHP is an OO language after all, I'll create a new container class that just extends `Container` and overrides the `map` function. For the sake of this example, I'll call this `SafeNumber`:
+
 ~~~
-class NanContainer {
-   
-			
+class SafeNumber extends Container {
+   public function map(callable $f) {		
+      if(!isset($this->_value) || is_nan($this->_value)) {
+         return static::of(); // empty container		}
+        else {
+           return static::of(call_user_func($f, $this->_value));
+        }			
+    }
 }
-~~
+~~~
 
+It looks very simple, but the effect of this wrapper type is incredible; most things in fucntional programming are very basic but with tremendous reach. I'll refactor `safeDivide` earlier to return a `SafeNumber`:
 
+~~~~
+/**
+ * Divide two numbers
+ * @return SafeNumber
+ */
+function safeDivide($a, $b) {   
+   return SafeNumber::of(empty($b) ? NAN : $a / $b);
+}
+~~~~
 
+One thing I like about this function is how honest it is about its return type. It's essentially notifying the caller that something might go wrong, and that it's safe to protect the result. Also, it removes the burden of having to NAN-check any functions that are invoked with this value. I'll show the cases of calling `safeDivide` with a valid as well as an invalid denominator:
 
+~~~
+	function square($a) {
+		return $a * $a;
+	}
+
+	function increment($a) {
+		return $a + 1;
+	}
+
+    // valid case
+	apply(safeDivide2)(5, 1)->map(square)->map(increment); //-> Container [26]
+
+    // error case
+	apply(safeDivide2)(5, 0)->map(square)->map(increment)); //-> Container[  ]
+~~~
+
+`SafeNumber` abstracts out the details of dealing with an invalid number, so that our application functions stay focused on carrying out their work instead of having to deal with this. I'll revisit this concept again in later chatpters in the context of error handling when I discuss *Monads*. 
 
 ##Closures
 TBD
