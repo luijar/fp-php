@@ -1,6 +1,5 @@
 #Higher-order PHP
-
-I mentioned in chapter 1 that functional programming is not a new framework, library, or design pattern. It's a way of thinking that offers an alternative to the way in which you design your code. However, paradigms by themselves are just abstract concepts that need the right host language to become a reality. And, yes! PHP is that language. In this chapter, I'll take a look at two important features of PHP: higher-order functions and closures. Both of these are instrumental in building all of the techniques you'll learn about in this book.
+I mentioned in chapter 1 that functional programming is not a new framework, library, or design pattern. Rather, it's a way of thinking that offers an alternative to the way in which you design your code. However, paradigms by themselves are just abstract concepts that need the right host language to become a reality. And, yes! PHP is that language. In this chapter, I'll take a look at two important features of PHP: higher-order functions and closures. Both of these are instrumental in building all of the techniques you'll learn about in this book. The goal of this chapter is to teach you how to use functions in a very different way, the *functional* way.
 
 ##PHP's higher-order functions 
 A higher-order function is defined as one that can accept other functions as arguments or be returned from another function. This is in direct relationship with another term you might've heard before, that has *first-class functions*. Both are intimately related, as the ability of a language artifact to be passed in as an argument or returned from a functions hinges on it being considered an object. This also means, of course, that functions can be assigned to variables. Let's take a look at a few examples: 
@@ -80,7 +79,7 @@ function apply(callable $operator) {
 }
 ~~~
 
-Also, this code makes it very explicit what it's purpose is and I can use to derive other types of functions from it:
+Don't mind at this point the `use` keyword, I'll explain this further in a bit. Notice this code makes it very explicit what it's purpose is, and how I can use it to derive other types of functions from it. Let's go over some simple examples:
 
 ~~~
 apply($add)(5, 5); //-> 10
@@ -141,13 +140,37 @@ else {
 }
 ~~~
 
-This approach avoids throwing the exception altogether which is not only a side effect, as it causes the program stack to unwind, but also it respects the *Locality Principle* of design. In particular, it obeys *spatial locality*, which states that related statements that should be executed sequentially shall be placed near each other.  
+This approach avoids throwing the exception altogether. Throwing anEeceptions is not only a side effect, as it causes the program stack to unwind, but also doesn't respect the *Locality Principle* of code. In particular, it fails to obey *spatial locality*, which states that related statements that should be executed sequentially shall be placed near each other. This has more application on CPU architecture, but can also be applied to code design.  
 
-To recap, this is all possible because PHP functions (including anonymous functions), as of PHP 5.3 are actually `Closure` instances behind the scenes. Before this version, this fact was just considered a design decision, but now you can reliably take advantage of this. In fact, because functions are true instances, as of PHP 5.4 you can actually invoke methods on them which gives you more control of the anonymous function after it's been created (as you might expect, closure instances all implement the magic method `__invoke()`, which is important for consistency reasons). 
+To recap, higher-order functions are possible in PHP because, as of PHP 5.3, they are actually `Closure` instances behind the scenes. Before this version, this was just considered an internal design decision, but now you can reliably take advantage of it to approach problems very differently. In this book, you'll learn to master higher-order functions. 
+
+Furthermore, because functions are true instances, as of PHP 5.4 you can actually invoke methods on them which gives you more control of an anonymous function after it's been created (as you might expect, `Closure` instances all implement the magic method `__invoke()`, which is important for consistency reasons with other classes). 
 
 http://php.net/manual/en/class.closure.php
 
-
 CONTAINER
+
+##Closures
+TBD
+
+##Liskov Substitution Principle
+TBD
+
+##What about our objects?
+
+Treat as values
+freeze PHP object
+Lenses
+
+##Functional vs Object-Oriented Summary
+
+| Traits        | Functional           | Object-oriented  |
+|:------------- |:-------------|:-----|
+| Unit of composition      | Functions | Objects (classes) |
+| Programming style     | Declarative      |   Mostly imperative |
+| Data and Behavior | Loosely coupled into pure, standalone functions      |    Tightly coupled in classes with methods| 
+|State Management | Treats objects as immutable values | Favors mutation of objects via instance methods |
+|Control flow|Functions and recursion| Loops and conditionals|
+|Tread-safety | Enables concurrent programming | Difficult to achieve |
 
 
