@@ -146,9 +146,20 @@ To recap, higher-order functions are possible in PHP because, as of PHP 5.3, the
 
 Furthermore, because functions are true instances, as of PHP 5.4 you can actually invoke methods on them which gives you more control of an anonymous function after it's been created (as you might expect, `Closure` instances all implement the magic method `__invoke()`, which is important for consistency reasons with other classes). 
 
-http://php.net/manual/en/class.closure.php
+Here's the protocol for the [Closure class](http://php.net/manual/en/class.closure.php). In chapter 4, I'll spend some more time going over the details of this class:
 
-CONTAINER
+~~~
+class Closure {
+   private __construct ( void )
+   public static Closure bind ( Closure $closure , object $newthis [, mixed $newscope = "static" ] )
+   public Closure bindTo ( object $newthis [, mixed $newscope = "static" ] )
+   public mixed call ( object $newthis [, mixed $... ] )
+}
+~~~
+
+##Back to containers
+
+
 
 ##Closures
 TBD
