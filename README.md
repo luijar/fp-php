@@ -1,6 +1,6 @@
 # fp-php
 
-Functional Programming in PHP
+Functional PHP Book
 
 # Pre-processor package
 

@@ -1,3 +1,7 @@
-#Unraveling Async PHP Code with PHP Guzzle
+#Reactive Programming in PHP
 
-Under Construction
+The PHP web sites of today, look nothing like the web sites of only a couple of years ago. The advent of cloud technology and microservices have deeply transformed web applications from single, monolithic installations to a decoupled, remote, web of interconnected systems. Every one of these systems serves a single purpose as part of the grand scheme of your application. For example, lots of modern web sites frequently access weather data, stock prices, social media feeds, and other other types of sources. This deluge of events is now squarely pointed at your application, and your code needs to be able to handle all of it and scale accordingly.
+
+This problem is now new, by any means. Nevertheless, the amount of data that passes through a web application these days grows and will continue to grow exponentially. As PHP developers building the web, keep in mind that your applications is nothing more than a node or a hub that fetches and receives information and transforms it into something else, driven by your business logic; this can later be consumed and transformed once more by other clients. 
+
+   
