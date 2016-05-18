@@ -4,7 +4,8 @@
 	"type": "project",
 	"require": {
 		"lstrojny/functional-php": "1.0.0",
-		"cypresslab/php-curry":"*"
+		"cypresslab/php-curry":"*",
+		"reactivex/rxphp": "*"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "5.0.8",

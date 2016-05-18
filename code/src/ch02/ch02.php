@@ -72,15 +72,15 @@ include_once '../ch01/ch01.php';
 	   return SafeNumber::of(empty($b) ? NAN : $a / $b);
 	}
 
-	$square = function ($a) {
+	function square($a) {
 		return $a * $a;
 	};
 
-	$increment = function ($a) {
+	function increment($a) {
 		return $a + 1;
 	};
 
-	println(apply2(@safeDivide2)(5, 1)->map($square)->map($increment));
+	println(apply2(@safeDivide2)(5, 1)->map(@square)->map(@increment));
 
-	println(apply2(@safeDivide2)(5, 0)->map($square)->map($increment));
+	println(apply2(@safeDivide2)(5, 0)->map(@square)->map(@increment));
 

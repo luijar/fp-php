@@ -1,7 +1,7 @@
 #Higher-order PHP
 I mentioned in chapter 1 that functional programming is not a new framework, library, or design pattern. Rather, it's a way of thinking that offers an alternative to the way in which you design your code. However, paradigms by themselves are just abstract concepts that need the right host language to become a reality. And, yes! PHP is that language. In this chapter, I'll take a look at two important features of PHP: higher-order functions and closures. Both of these are instrumental in building all of the techniques you'll learn about in this book. The goal of this chapter is to teach you how to use functions in a very different way, the *functional* way.
 
-##PHP's higher-order functions 
+##PHP's first-class, higher-order functions 
 A higher-order function is defined as one that can accept other functions as arguments or be returned from another function. This is in direct relationship with another term you might've heard before, that has *first-class functions*. Both are intimately related, as the ability of a language artifact to be passed in as an argument or returned from a functions hinges on it being considered an object. This also means, of course, that functions can be assigned to variables. Let's take a look at a few examples: 
 
 Functions in PHP can be manipulated just like objects. In fact, if you were to check the type of a function, you'll find out that they are instances of the class [`Closure`](http://php.net/manual/en/class.closure.php):
@@ -144,7 +144,7 @@ This approach avoids throwing the exception altogether. Throwing anEeceptions is
 
 To recap, higher-order functions are possible in PHP because, as of PHP 5.3, they are actually `Closure` instances behind the scenes. Before this version, this was just considered an internal design decision, but now you can reliably take advantage of it to approach problems very differently. In this book, you'll learn to master higher-order functions. 
 
-Furthermore, because functions are true instances, as of PHP 5.4 you can actually invoke methods on them which gives you more control of an anonymous function after it's been created (as you might expect, `Closure` instances all implement the magic method `__invoke()`, which is important for consistency reasons with other classes). 
+Furthermore, because functions are true instances, as of PHP 5.4 you can actually invoke methods on them which gives you more control of an anonymous function after it's been created (as you might expect, `Closure` instances all implement the magic method `__invoke()`, which is important for consistency reasons with other classes).
 
 Here's the protocol for the [Closure class](http://php.net/manual/en/class.closure.php). In chapter 4, I'll spend some more time going over the details of this class:
 
@@ -155,6 +155,55 @@ class Closure {
    public Closure bindTo ( object $newthis [, mixed $newscope = "static" ] )
    public mixed call ( object $newthis [, mixed $... ] )
 }
+~~~
+###Heck, even plain objects are invokable
+Aside from having true first-class, higher-order functions, PHP takes it to the next level with invocable objects. Now, this isn't really a functional concept whatsoever, but used correctly it could be a pretty cool technique.  In fact, PHP's anonymous function syntax under the hood gets compiled to a class with an `__invoke()` method on it. 
+
+Now, the reason why this isn't really a functional technique per se, is that functional programming tends to impose a clear separation of behavior and state. I'll talk more about this in later chapters, but in essence that goal is to decouple the functiosn away from their owning objects. One reason for doing this is that the use of the `$this` keyword is a gateway for side effects. Consider this simple `Counter` class: 
+
+~~~
+class Counter {
+   private $_value;
+
+   public function __construct($init) {
+      $this->_value = $init;
+   }
+
+   public function increment() {
+      return $this->_value++;
+   }
+}
+
+$c = new Counter(0);
+$c->increment(); //-> 1
+$c->increment(); //-> 2
+$c->increment(); //-> 3
+~~~ 
+
+The `increment()` function is theoretically considered not pure (or impure) because it's reaching for data in its outer scope (the instance scope). Fortunately, this class encapsulates this state pretty well and doesn't expose any mutation methods (i.e. a setter). So, from a practical standpoint, this setter is predictable and constant. We can go ahead and make this object invocable by adding the magic `__invoke()` method:
+
+~~~
+public function __invoke() {
+   return $this->increment()
+}
+
+$increment = new Counter(100);
+increment(); //-> 101
+increment(); //-> 102
+increment(); //-> 103
+~~~
+
+In practical functional programming, there are many design patterns that revolve around wrapping values into objects and using functions to manipulate them, more on this later. But for the most part, we'll prefer to separate the behavior and the state. One way of doing this to keep things semantically meaningful is to prefer static functions that declare arguments for any data they need to carry out their job:
+
+~~~
+class Counter {
+   ...
+   public static function increment($val) {
+      return $val + 1;
+   }
+}
+
+Counter::increment(100); //-> 101
 ~~~
 
 ##Using containers improve your APIs
@@ -214,6 +263,9 @@ One thing I like about this function is how honest it is about its return type. 
 
 ##Closures
 TBD
+
+A closure gets compiled to a class with a `__invoke()` but its constructor is what takes the data in `use`.
+
 
 ##Become a SOLID functional developer
 TBD
