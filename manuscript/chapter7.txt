@@ -2,6 +2,29 @@
 
 The PHP web sites of today, look nothing like the web sites of only a couple of years ago. The advent of cloud technology and microservices have deeply transformed web applications from single, monolithic installations to a decoupled, remote, web of interconnected systems. Every one of these systems serves a single purpose as part of the grand scheme of your application. For example, lots of modern web sites frequently access weather data, stock prices, social media feeds, and other other types of sources. This deluge of events is now squarely pointed at your application, and your code needs to be able to handle all of it and scale accordingly.
 
-This problem is now new, by any means. Nevertheless, the amount of data that passes through a web application these days grows and will continue to grow exponentially. As PHP developers building the web, keep in mind that your applications is nothing more than a node or a hub that fetches and receives information and transforms it into something else, driven by your business logic; this can later be consumed and transformed once more by other clients. 
+This problem is now new, by any means. Nevertheless, the amount of data that passes through a web application these days grows and will continue to grow exponentially for the years to come. As PHP developers building the web, keep in mind that your applications is nothing more than a node or a hub that fetches and receives information in order to transform it into something new, driven by your business logic; this can later be consumed and transformed once more into something else. 
 
-   
+Often, the sheer volume of this data can't be consumed by traditional means of computing. What do I mean by that? Most of your development work on a day to day basis is done under the assumption that code runs *synchronously*. A synchronous block of code is one that can't execute until the preceding code does, in that order. In other words, statements depend on the preceding one to succesfully run. But when processing large amounts of data, this paradigm becomes ineffective if it consumes your allocated PHP process and the user is sitting idle waiting for something to happen. Examples of this include blocking calls like writing large files to disk, executing expensive SQL queries, etc. So, you might say: "well, why not just write *asynchronous* code?" 
+
+Asynchronous code creates another inconvenience, added to the already complex task you're trying to solve: *latency*. The very paradigms that allow us to reason about asynchronous programs are difficult to express in code. Arguably, asynchronous code is more difficult to implement that synchronous due to the unpredictability of if and when a block of code runs. 
+
+##What we mean by synchronous vs asynchronous
+
+Oddly enough "Synchronously" means "using the same clock" so when two instructions are synchronous they use the same clock and must happen one after the other. "Asynchronous" means "not using the same clock" so the instructions are not concerned with being in step with each other. That's why it looks backwards, the term is not referring to the instructions relationship to each other. It's referring to each instructions relationship to the clock. Hope that helps.  
+
+gearman extension
+
+pthreads
+
+requires zts (thread-safe) which is dangerous if used in the web with apache
+
+pcntl_fork -> multiprocessing not multithreading
+
+Using curl
+
+ReactPHP uses libevent / libev
+
+
+
+##Introducing streams
+
