@@ -2,9 +2,9 @@
 
 abstract class Model {
 	
-	protected $id;
-	protected $createdAt;
-	protected $updateAt;
+	public $id;
+	public $createdAt;
+	public $updateAt;
 
 	private $_db;
 
@@ -31,7 +31,7 @@ abstract class Model {
 
 	public static function all() {		
 		$clazz = get_called_class();
-		$prototype = new $clazz;
+		$prototype = new $clazz();
 		$sql = "SELECT * FROM {$prototype->getTablename()}";
 		    		
 		$db = static::_connect();   		
@@ -39,17 +39,20 @@ abstract class Model {
 		    die('There was an error running the query [' . $db->error . ']');
 		}
 
-		print_r($result);
+		$instances = array_fill(0, $result->num_rows, null);	
 
-		$instances = array_fill(0, $result->num_rows);	
-
+		$count = 0;
 		while($record = $result->fetch_assoc()) {
-			print_r($record);
-		    echo $record['firstname'] . '<br />';
+			$instance = new $clazz();
+			foreach ($result->fetch_fields() as $field) {				
+				if(property_exists($clazz, $field->name)) {										
+					$instance->{$field->name} = $record[$field->name];
+				}								
+			}		
+			$instances[$count++] = $instance;
 		}
 
 		$result->free();
-
 		return $instances;
 	}
 

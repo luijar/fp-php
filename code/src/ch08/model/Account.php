@@ -4,9 +4,9 @@ require_once 'Model.php';
 
 class Account extends Model {
 		
-	private $userId;
-	private $type;
-	private $balance;
+	public $userId;
+	public $type;
+	public $balance;
 
 	public function getUserId() {
 		return $this->userId;

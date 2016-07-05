@@ -4,9 +4,9 @@ require_once 'Model.php';
 
 class User extends Model {
 	
-	private $firstname;
-	private $lastname;
-	private $email;
+	public $firstname;
+	public $lastname;
+	public $email;
 		
 	public function getFirstname() {
 		return $this->firstname;
