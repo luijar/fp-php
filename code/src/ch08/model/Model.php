@@ -1,12 +1,19 @@
 <?php namespace Model;
 
-abstract class Model {
-	
-	public $id;
-	public $createdAt;
-	public $updateAt;
+require_once 'Model.php';
 
+abstract class Model {
+
+	// Shared model fields
+	public $id;
+	public $created_at;
+	public $update_at;
+
+	// Database connection
 	private $_db;
+
+	// Hidden (not exposed) fields
+	private $_hidden = ['id', '_db', '_hidden'];
 
 	// ---- Model surface ---- //
 	public function getId() {
@@ -25,8 +32,31 @@ abstract class Model {
 
 
 	// ---- Internal ---- //
-	public function save() {
-		$this->db();
+	public function save() {		
+		if(empty($this->id)) {
+			throw new \RuntimeException('Cannot save a transient object');
+		}	
+
+		$db = $this->db();
+
+		$columnValues = [];
+		foreach(get_object_vars($this) as $prop => $val) {
+			if(empty($val)) {
+				continue;
+			}
+			print('Prop'. $prop . '  value  '. $value);			
+			if(!in_array($prop, $this->_hidden)) {
+				$columnValues[] = "{$prop}={$val}";
+			}			
+		}
+
+		print_r($columnValues);
+
+		$values = implode(',', $columnValues);
+		$updateStmt = $db->prepare("UPDATE {$this->getTablename()} SET {$values} WHERE id = {$this->getId()}");
+		// $name = 'Bob';
+		// $updateStmt->bind_param('s', $name);
+		// $updateStmt->execute();
 	}
 
 	public static function all() {		
@@ -59,7 +89,8 @@ abstract class Model {
 	private function db() {
 		if(empty($this->_db)) {
 			$this->_db = static::_connect();				
-		}		
+		}
+		return $this->_db;		
 	}
 
 	private static function _connect() {

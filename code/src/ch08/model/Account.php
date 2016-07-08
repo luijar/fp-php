@@ -5,7 +5,7 @@ require_once 'Model.php';
 class Account extends Model {
 		
 	public $userId;
-	public $type;
+	public $account_type;
 	public $balance;
 
 	public function getUserId() {
@@ -13,7 +13,7 @@ class Account extends Model {
 	}
 
 	public function getType() {
-		return $this->typeId;
+		return $this->account_type;
 	}
 
 	public function getBalance() {

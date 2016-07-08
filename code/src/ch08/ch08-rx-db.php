@@ -10,6 +10,9 @@ require_once 'model/User.php';
 require_once 'model/Account.php';	
 require_once 'common.php';
 
+use \Model\Account as Account;
+use \Model\User as User;
+
 // --- samples --- //	
 println('Example 1 - Filter simple');
 	\Rx\Observable::fromArray(\Model\User::all())
@@ -44,6 +47,7 @@ println('Example 2 - Take');
 		    }
 	 	));
 
+
 println('Example 3 - Just and Map');
 	\Rx\Observable::just(\Model\User::all())		
 	 	->map(function ($results) {	 		
@@ -52,6 +56,18 @@ println('Example 3 - Just and Map');
 		->subscribe($stdoutObserver());
 
 
+println('Example 4 - Get all accounts of type SAVING');
+	\Rx\Observable::fromArray(\Model\Account::all())		
+	    ->filter(function (Account $account) {
+	    	return $account->getType() === 'SAVINGS';	
+	    })
+	 	->map(function (Account $savingsAccount) {	 		
+	 		return $savingsAccount->getBalance();
+	 	})
+		->subscribe($stdoutObserver());
 
+	User::all()[0]->setLastname('Richards')->save();
+
+	
 
 

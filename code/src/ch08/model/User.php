@@ -3,7 +3,7 @@
 require_once 'Model.php';
 
 class User extends Model {
-	
+
 	public $firstname;
 	public $lastname;
 	public $email;
