@@ -5,9 +5,7 @@ require_once 'Model.php';
 abstract class Model {
 
 	// Shared model fields
-	public $id;
-	public $created_at;
-	public $update_at;
+	public $id;	
 
 	// Database connection
 	private $_db;
@@ -18,14 +16,6 @@ abstract class Model {
 	// ---- Model surface ---- //
 	public function getId() {
 		return $this->id;	
-	}
-
-	public function getCreatedAt() {
-		return $this->createdAt;
-	}
-
-	public function getUpdatedAt() {
-		return $this->updateAt;
 	}
 
 	public abstract function getTablename();
@@ -39,24 +29,23 @@ abstract class Model {
 
 		$db = $this->db();
 
-		$columnValues = [];
-		foreach(get_object_vars($this) as $prop => $val) {
-			if(empty($val)) {
-				continue;
-			}
-			print('Prop'. $prop . '  value  '. $value);			
-			if(!in_array($prop, $this->_hidden)) {
-				$columnValues[] = "{$prop}={$val}";
+		$setClause = array();
+		$columnValues = array();
+		foreach(get_object_vars($this) as $prop => $val) {			
+			if(!empty($val) && !in_array($prop, $this->_hidden)) {
+				$setClause[] = "{$prop}=?";				
+				$columnValues[] = $val;
 			}			
 		}
 
-		print_r($columnValues);
+		$setClause = implode(',', $setClause);
+		$updateStmt = $db->prepare("UPDATE {$this->getTablename()} SET {$setClause} WHERE id = {$this->getId()}");						
 
-		$values = implode(',', $columnValues);
-		$updateStmt = $db->prepare("UPDATE {$this->getTablename()} SET {$values} WHERE id = {$this->getId()}");
-		// $name = 'Bob';
-		// $updateStmt->bind_param('s', $name);
-		// $updateStmt->execute();
+		// Call bind_param with a dynamic array
+		array_unshift($columnValues, str_repeat('s', count($columnValues)));		
+		call_user_func_array(array($updateStmt, 'bind_param'), $this->_refValues($columnValues));
+		$updateStmt->execute();	
+		return $this;
 	}
 
 	public static function all() {		
@@ -84,6 +73,15 @@ abstract class Model {
 
 		$result->free();
 		return $instances;
+	}
+
+	private function _refValues($arr){
+	    $refs = array();
+        foreach($arr as $key => $value) {
+        	$refs[$key] = &$arr[$key];
+        }
+            
+        return $refs;
 	}
 
 	private function db() {
