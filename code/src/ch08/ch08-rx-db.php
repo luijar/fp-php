@@ -66,8 +66,12 @@ println('Example 4 - Get all accounts of type SAVING');
 	 	})
 		->subscribe($stdoutObserver());
 
-	User::all()[0]->setLastname('Richards')->save();
 
-	
+println('Withdraw 1000 from Luis');
+
+$result = User::find(1);
+print_r($result);
+
+
 
 

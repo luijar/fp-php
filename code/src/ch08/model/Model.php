@@ -10,9 +10,6 @@ abstract class Model {
 	// Database connection
 	private $_db;
 
-	// Hidden (not exposed) fields
-	private $_hidden = ['id', '_db', '_hidden'];
-
 	// ---- Model surface ---- //
 	public function getId() {
 		return $this->id;	
@@ -21,7 +18,36 @@ abstract class Model {
 	public abstract function getTablename();
 
 
-	// ---- Internal ---- //
+	public static function find($id) {
+		if(empty($id)) {
+			throw new \InvalidArgumentException('Expected valid ID value');
+		}		
+
+		$clazz = get_called_class();
+		$prototype = new $clazz();
+		$sql = "SELECT * FROM {$prototype->getTablename()} WHERE id = {$id}";
+
+		$db = static::_connect();   		
+		if(!$result = $db->query($sql)) {
+		    die('There was an error running the query [' . $db->error . ']');
+		}
+
+		while($record = $result->fetch_assoc()) {
+			$instance = new $clazz();
+			foreach ($result->fetch_fields() as $field) {				
+				if(property_exists($clazz, $field->name)) {										
+					$instance->{$field->name} = $record[$field->name];
+				}								
+			}
+			$instance->_db = $db;					
+		}
+
+		$result->free();
+
+		return $instance;		
+	}
+
+	
 	public function save() {		
 		if(empty($this->id)) {
 			throw new \RuntimeException('Cannot save a transient object');
@@ -29,10 +55,13 @@ abstract class Model {
 
 		$db = $this->db();
 
+		// Hidden (not exposed) fields
+		$hidden = ['id', '_db'];
+
 		$setClause = array();
 		$columnValues = array();
 		foreach(get_object_vars($this) as $prop => $val) {			
-			if(!empty($val) && !in_array($prop, $this->_hidden)) {
+			if(!empty($val) && !in_array($prop, $hidden)) {
 				$setClause[] = "{$prop}=?";				
 				$columnValues[] = $val;
 			}			
@@ -68,6 +97,7 @@ abstract class Model {
 					$instance->{$field->name} = $record[$field->name];
 				}								
 			}		
+			$instance->_db = $db;	
 			$instances[$count++] = $instance;
 		}
 
@@ -75,6 +105,7 @@ abstract class Model {
 		return $instances;
 	}
 
+	// ---- Internal ---- //
 	private function _refValues($arr){
 	    $refs = array();
         foreach($arr as $key => $value) {
@@ -95,10 +126,7 @@ abstract class Model {
 		$db = new \mysqli("localhost", "root", "secret", "rx_samples");
 		if ($db->connect_errno) {
 	    	echo "Failed to connect to MySQL: ({$mysqli->connect_errno})  {$mysqli->connect_error}";
-		}
-		else {
-			echo "Connected to : {$db->host_info} \n";
-		}
+		}		
 		return $db;
 	}
 }
