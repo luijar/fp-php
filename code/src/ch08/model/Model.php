@@ -18,36 +18,50 @@ abstract class Model {
 	public abstract function getTablename();
 
 
-	public static function find($id) {
-		if(empty($id)) {
-			throw new \InvalidArgumentException('Expected valid ID value');
-		}		
-
+	public static function query($column, $value = null) {	
 		$clazz = get_called_class();
 		$prototype = new $clazz();
-		$sql = "SELECT * FROM {$prototype->getTablename()} WHERE id = {$id}";
+		$sql = "SELECT * FROM {$prototype->getTablename()}";
+
+		if(!empty($column)) {
+			$sql .= " WHERE {$column} = {$value};";
+		}
+		else {
+			$sql .=	';';
+		}
 
 		$db = static::_connect();   		
 		if(!$result = $db->query($sql)) {
 		    die('There was an error running the query [' . $db->error . ']');
 		}
 
+		$instances = [];	
 		while($record = $result->fetch_assoc()) {
 			$instance = new $clazz();
 			foreach ($result->fetch_fields() as $field) {				
 				if(property_exists($clazz, $field->name)) {										
 					$instance->{$field->name} = $record[$field->name];
 				}								
-			}
-			$instance->_db = $db;					
+			}		
+			$instance->_db = $db;	
+			$instances[] = $instance;
 		}
 
 		$result->free();
-
-		return $instance;		
+		return $instances;		
 	}
 
-	
+	public static function find($id) {
+		if(empty($id)) {
+			throw new \InvalidArgumentException('Expected valid ID value');
+		}
+		return static::query('id', $id)[0];
+	}
+
+	public static function all() {		
+		return static::query(null);		
+	}
+
 	public function save() {		
 		if(empty($this->id)) {
 			throw new \RuntimeException('Cannot save a transient object');
@@ -75,34 +89,6 @@ abstract class Model {
 		call_user_func_array(array($updateStmt, 'bind_param'), $this->_refValues($columnValues));
 		$updateStmt->execute();	
 		return $this;
-	}
-
-	public static function all() {		
-		$clazz = get_called_class();
-		$prototype = new $clazz();
-		$sql = "SELECT * FROM {$prototype->getTablename()}";
-		    		
-		$db = static::_connect();   		
-		if(!$result = $db->query($sql)) {
-		    die('There was an error running the query [' . $db->error . ']');
-		}
-
-		$instances = array_fill(0, $result->num_rows, null);	
-
-		$count = 0;
-		while($record = $result->fetch_assoc()) {
-			$instance = new $clazz();
-			foreach ($result->fetch_fields() as $field) {				
-				if(property_exists($clazz, $field->name)) {										
-					$instance->{$field->name} = $record[$field->name];
-				}								
-			}		
-			$instance->_db = $db;	
-			$instances[$count++] = $instance;
-		}
-
-		$result->free();
-		return $instances;
 	}
 
 	// ---- Internal ---- //

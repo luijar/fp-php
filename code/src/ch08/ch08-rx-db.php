@@ -12,6 +12,8 @@ require_once 'common.php';
 
 use \Model\Account as Account;
 use \Model\User as User;
+use \Rx\Observable as Observable;
+use \Rx\Observer as Observer;
 
 // --- samples --- //	
 println('Example 1 - Filter simple');
@@ -67,11 +69,35 @@ println('Example 4 - Get all accounts of type SAVING');
 		->subscribe($stdoutObserver());
 
 
-println('Withdraw 1000 from Luis');
-
-$result = User::find(1);
-print_r($result);
-
-
-
-
+println('Withdraw 1000 from Luis SAVINGS account');
+	$id = 1;
+	Observable::just($id)
+		->map(function ($userId) {
+			return User::find($userId);	
+		})
+		->doOnNext(function (User $user) {
+			printf("Found user: %s \n", $user->getEmail());
+		})
+		->flatMap(function (User $user) {
+			return Observable::fromArray(Account::query('user_id', $user->getId()));
+		})
+		->takeWhile(function (Account $account) {
+			return $account->getType() === 'SAVINGS';
+		})
+		->doOnNext(function (Account $account) {
+			printf("Found savings account. Current balance: %d \n", $account->getBalance());			
+		})
+		->map(function (Account $account) {
+			return $account->withdraw(1000)->save();			
+		})		
+		->subscribe(new Observer\CallbackObserver(
+		    function ($account) {
+		    	printf("New account balance: %d \n", $account->getBalance());					        
+		    },
+		    function (Exception $ex) {
+		        print 'Error: ' . $ex->getMessage();
+		    },
+		    function () {
+		        print 'Completed!';
+		    }
+	 	));

@@ -22,8 +22,6 @@ println('Example 1');
  	));
 
 
-//
-
 println('Example 2 Reduce Map Filter with Curry');
 
 	$even = function ($num) {

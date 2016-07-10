@@ -4,7 +4,7 @@ require_once 'Model.php';
 
 class Account extends Model {
 		
-	public $userId;
+	public $user_id;
 	public $account_type;
 	public $balance;
 
@@ -22,5 +22,10 @@ class Account extends Model {
 
 	public function getTablename() {
 		return 'accounts';
+	}
+
+	public function withdraw($amount) {
+		$this->balance -= $amount;
+		return $this;
 	}
 }
