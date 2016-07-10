@@ -58,18 +58,12 @@ Observable::just('FB')
 			})
 			->map(function ($userId) {
 				return User::find($userId);	
-			})
-			->doOnNext(function (User $user) {
-				printf("Found user: %s \n", $user->getEmail());
-			})
+			})			
 			->flatMap(function (User $user) {
 				return Observable::fromArray(Account::query('user_id', $user->getId()));
 			})
 			->takeWhile(function (Account $account) {
 				return $account->getType() === 'SAVINGS';
-			})
-			->doOnNext(function (Account $account) {
-				printf("Found savings account. Current balance: %d \n", $account->getBalance());			
 			});
 	}
 
