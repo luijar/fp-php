@@ -8,6 +8,11 @@
 	require_once 'model/Account.php';	
 	require_once 'common.php';	
 
+println('Example 0');
+
+\Rx\Observable::just('Hello World!')
+	->subscribe($stdoutObserver());
+
 println('Example 1');
 	\Rx\Observable::fromArray([1, 2, 3, 4])->subscribe(new \Rx\Observer\CallbackObserver(
 	    function ($x) {
@@ -24,7 +29,7 @@ println('Example 1');
 
 println('Example 2 Reduce Map Filter with Curry');
 
-	$even = function ($num) {
+	$isEven = function ($num) {
 		return $num % 2 === 0;
 	};
 
@@ -35,15 +40,14 @@ println('Example 2 Reduce Map Filter with Curry');
 	$raiseTo = function ($power, $num) {
 		return pow ($num, $power);
 	};
-	use Cypress\Curry as C;
-
-	$square = C\curry($raiseTo, 2);
+	
+	$computeSquare = P::curry2($raiseTo)(2);
 
 	\Rx\Observable::fromArray([1, 2, 3, 4])
-		->filter($even)
-		->map($square)
+		->filter($isEven)
+		->map($computeSquare)
 		->reduce($add, 0)
-		->subscribe($stdoutObserver());
+		->subscribe($stdoutObserver());  //-> 20
 
 println('Example 3 - Map');
 	\Rx\Observable::fromArray([1, 2, 3, 4])

@@ -18,7 +18,7 @@ abstract class Model {
 	public abstract function getTablename();
 
 
-	public static function query($column, $value = null) {	
+	public static function query($column = null, $value = null) {	
 		$clazz = get_called_class();
 		$prototype = new $clazz();
 		$sql = "SELECT * FROM {$prototype->getTablename()}";

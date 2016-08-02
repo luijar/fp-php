@@ -1,8 +1,9 @@
 <?php
-include_once '../ch01/ch01.php';
+  /**  Chapter 2 
+    *  Author: Luis Atencio
+	*/
 
-// Chapter 02
-	var_dump(function() { });
+	include_once '../ch01/ch01.php';
 
 	function adderOf($a) {
 		return function ($b) use ($a) {
@@ -11,6 +12,8 @@ include_once '../ch01/ch01.php';
 	}		
 	
 	$add5 = adderOf(5);
+
+	$add5(5); //-> 10
 
 	println('is callable: '. is_callable($add5));
 
@@ -49,7 +52,11 @@ include_once '../ch01/ch01.php';
 	   return empty($b) ? NAN : $a / $b;
 	};
 
-	println(apply2($safeDivide)(5, 0));
+	println(
+
+		apply($divide)(5, 0)
+
+		);
 
 	println('Is NAN: '. is_nan(apply2($safeDivide)(5, 0)));
 
@@ -66,7 +73,6 @@ include_once '../ch01/ch01.php';
 			}			
 		}
 	}
-
 
 	function safeDivide2($a, $b) {   
 	   return SafeNumber::of(empty($b) ? NAN : $a / $b);
