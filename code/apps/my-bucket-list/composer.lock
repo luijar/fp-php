@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "de8f0ff72cf9eb411040565362f2aa9e",
-    "content-hash": "1ca2d8ac4b170f11adaeff6a21dd4b68",
+    "hash": "9dbfe591a0857e0842a5a56fe43cb6b4",
+    "content-hash": "1f1b86b25c41bd5e4fcd4c2ee05d0329",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -2046,16 +2046,16 @@
         },
         {
             "name": "lstrojny/functional-php",
-            "version": "dev-master",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lstrojny/functional-php.git",
-                "reference": "72418f9fe4216e6140d6a984e5df461dec4c9531"
+                "reference": "cc97ae1bad385ace917af9727cf4f03e1a415b54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lstrojny/functional-php/zipball/72418f9fe4216e6140d6a984e5df461dec4c9531",
-                "reference": "72418f9fe4216e6140d6a984e5df461dec4c9531",
+                "url": "https://api.github.com/repos/lstrojny/functional-php/zipball/cc97ae1bad385ace917af9727cf4f03e1a415b54",
+                "reference": "cc97ae1bad385ace917af9727cf4f03e1a415b54",
                 "shasum": ""
             },
             "require": {
@@ -2122,7 +2122,6 @@
                     "src/Functional/Ratio.php",
                     "src/Functional/ReduceLeft.php",
                     "src/Functional/ReduceRight.php",
-                    "src/Functional/Reindex.php",
                     "src/Functional/Reject.php",
                     "src/Functional/Retry.php",
                     "src/Functional/Select.php",
@@ -2159,7 +2158,7 @@
             "keywords": [
                 "functional"
             ],
-            "time": "2016-08-16 16:56:57"
+            "time": "2016-08-16 10:16:31"
         },
         {
             "name": "mockery/mockery",
@@ -3633,8 +3632,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "phpoption/phpoption": 20,
-        "kapolos/pramda": 20,
-        "lstrojny/functional-php": 20
+        "kapolos/pramda": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

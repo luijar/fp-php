@@ -4,6 +4,7 @@ use P as F;
 use Log;
 use App\Item;
 use App\User;
+use App\Util\Tuple;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PhpOption\Option as Nullable;
@@ -16,6 +17,13 @@ class Main extends Controller {
      * GET
      */
     public function __invoke(): View {
+        // $point = Tuple::create('double', 'double');
+
+        // $point(1.0, 2.5); // Tuple(1, 2.5)
+
+        // Log::info('Point is: '. $point(1.5, 3.0)[1]); // 3.0
+
+
         return view('main')->with('items', Item::all()) ;
     }
 
@@ -26,7 +34,7 @@ class Main extends Controller {
 
         $newItem = Nullable::fromValue($request->input('text'))
                 ->reject('')                
-                ->filter(F::pipe('strlen', F::nd(TRUE)))                
+                ->filter(F::allPass(['strlen']))                                
                 ->map(function ($content) {
                     return Item::create([
                         'content' => $content
@@ -36,6 +44,15 @@ class Main extends Controller {
                     Log::info('New item content not found. Skipping...');
                 });
 
+        return redirect('/main')->with('status', 'New item added!');
+    }
+
+    /**
+     * POST
+     */
+    public function deleteItem($id): RedirectResponse {
+
+        Log::info('Deleteing '. $id);
         return redirect('/main')->with('status', 'New item added!');
     }
 }

@@ -17,4 +17,4 @@ Route::get('/', function () {
 
 Route::get('/main',         'Main');
 Route::post('/new',         'Main@newItem');
-Route::post('/delete/{id}', 'Main@deleteItem');
+Route::post('/delete/{id}', 'Main@deleteItem')->middleware('nullable-params');

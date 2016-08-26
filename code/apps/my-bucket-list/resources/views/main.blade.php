@@ -16,36 +16,33 @@
     <body>
         <div class="container">
             <section class="todo">
-                <ul class="todo-controls">
-                    <li>
-                        <button type="button" class="button">Add</button>
-                    </li>
-                    <li>
-                        <button type="button" class="button">Delete</button>
-                    </li>                    
-                </ul>
-            
+
+                @if (session('status'))        
+                    <ul class="todo-controls">
+                        <li>
+                            {{ session('status') }}
+                        </li>                                        
+                    </ul>                    
+                @endif                      
+
                 <ul class="todo-list">
-                    @foreach ($items as $item)                        
-                        <li>  <!-- class="done" -->
-                            <input type="checkbox" id="{{$item->id}}" /> <!-- checked disabled --> 
-                            <label class="toggle" for="{{$item->id}}"></label>
-                            {{$item->getContent()}}
-                            @if($item === $items->last())
-                                <br/>
-                                @if (session('status'))        
-                                    <span id="temp_message">
-                                        {{ session('status') }}
-                                    </span>
-                                @endif  
-                            @endif
-                        </li>
-                    @endforeach
-                    
+                    <form method="POST" action="/delete">
+                        @foreach ($items as $item)                        
+                            <li>  <!-- class="done" -->
+                                <input type="checkbox" name="items[]" value="{{$item->id}}" id="item-{{$item->id}}" /> <!-- checked disabled --> 
+                                <label class="toggle" for="item-{{$item->id}}"></label>
+                                {{$item->getContent()}}
+                            </li>
+                        @endforeach
+                        <li style="display:block;">
+                            <input type="submit" class="button" value="Delete"></input>         
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        </li>                                            
+                    </form>
                     <li style="display:block;">
                         <form method="POST" action="/new">
                             <input type="text" name="text" id="add-text"></input>
-                            <input type="submit" class="button" value="Save"></input> 
+                            <input type="submit" class="button" value="Add new"></input> 
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         </form>                        
                     </li>                                            
