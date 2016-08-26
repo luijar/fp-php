@@ -10,11 +10,10 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/main',         'Main');
-Route::post('/new',         'Main@newItem');
-Route::post('/delete/{id}', 'Main@deleteItem')->middleware('nullable-params');
+Route::get('/main',    'Main');
+Route::post('/new',    'Main@newItem');
+Route::post('/delete', 'Main@deleteItems')->middleware(App\Http\Middleware\NullableParams::class. ':items');

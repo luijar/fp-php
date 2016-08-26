@@ -50,9 +50,9 @@ class Main extends Controller {
     /**
      * POST
      */
-    public function deleteItem($id): RedirectResponse {
+    public function deleteItems(Request $request): RedirectResponse {
 
-        Log::info('Deleteing '. $id);
+        Log::info('Deleteing '. print_r($request->input('items'), true));
         return redirect('/main')->with('status', 'New item added!');
     }
 }
