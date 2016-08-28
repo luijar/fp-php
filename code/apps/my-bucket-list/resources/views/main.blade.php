@@ -36,14 +36,25 @@
                                           
                 <ul class="todo-list">            
                     @foreach ($items as $item)                        
-                        <li>  <!-- class="done" -->
-                            <input type="checkbox" name="items[]" value="{{$item->id}}" id="item-{{$item->id}}" /> <!-- checked disabled --> 
-                            <label class="toggle" for="item-{{$item->id}}"></label>
-                            {{$item->getContent()}}
-                            <span id="delete-item-{{$item->id}}" style="display:none; float:right;">
-                                <a href="/delete/{{$item->id}}">( delete )</a>
-                            </span>
-                        </li>
+                        @if($item->state->getShortName() === 'completed')
+                            <li class="done">
+                                <input type="checkbox" name="items[]" value="{{$item->id}}" id="item-{{$item->id}}" checked disabled/> 
+                                <label class="toggle" for="item-{{$item->id}}"></label>
+                                {{$item->getContent()}}
+                                <span id="delete-item-{{$item->id}}" style="display:inline; float:right;">
+                                    <a href="/delete/{{$item->id}}">( delete )</a>
+                                </span>
+                            </li>
+                        @else
+                            <li>
+                                <input type="checkbox" name="items[]" value="{{$item->id}}" id="item-{{$item->id}}" /> <!-- checked disabled --> 
+                                <label class="toggle" for="item-{{$item->id}}"></label>
+                                {{$item->getContent()}}
+                                <span id="delete-item-{{$item->id}}" style="display:none; float:right;">
+                                    <a href="/delete/{{$item->id}}">( delete )</a>
+                                </span>
+                            </li>
+                        @endif                        
                     @endforeach                   
                     <li style="display:block;">
                         <form method="POST" action="/new">

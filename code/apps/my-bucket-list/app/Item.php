@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use PhpOption\Option as Nullable;
 use Illuminate\Database\Eloquent\Model;
 use App\State;
 
@@ -36,7 +37,11 @@ class Item extends Model {
     }
 
     public function state() {
-    	return $this->hasOne(State::class);
+    	return $this->belongsTo(State::class);
+    }
+
+    public static function findNullable(int $id): Nullable {
+        return Nullable::fromValue(parent::find($id));
     }
 
     public static function instance() {

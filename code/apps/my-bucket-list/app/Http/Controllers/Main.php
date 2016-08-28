@@ -112,4 +112,25 @@ class Main extends Controller {
             
         return redirect('/main')->with('status', "{$count} item deleted!");      
     }
+
+    /**
+     * POST
+     */
+    public function completeItem($id): JsonResponse {
+        
+        $status = Nullable::fromValue($id)
+            ->reject('')
+            ->map('intval')
+            ->filter(P::lt(0))
+            ->flatMap(Item::class. '::findNullable')
+            ->map(function ($item) {
+                return $item->setStateId(State::of('completed')->id)->save();
+            })
+            ->getOrThrow(new \RuntimeException("Item by ID {$id} not found!"));
+
+        return response()->json([
+            'status' => $status,
+            'id' => "item-${$id}"
+        ]);
+    }
 }

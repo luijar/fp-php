@@ -9,20 +9,20 @@ class State extends Model {
     protected $fillable = ['short_name', 'display_name'];
 
     public function getShortName(): string {
-        return $this->shortName;
+        return $this->short_name;
     }
     
     public function setShortName(string $shortName): State {
-        $this->shortName = $shortName;
+        $this->short_name = $shortName;
         return $this;
     }
 
     public function getDisplayName(): string {
-        return $this->displayName;
+        return $this->display_name;
     }
     
     public function setDisplayName(string $displayName): State {
-        $this->displayName = $displayName;
+        $this->display_name = $displayName;
         return $this;
     }
 
