@@ -7,6 +7,9 @@
 
         <title>My Bucket List | Home</title>
 
+        <!-- RxJS -->
+        <script src="https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.11/dist/global/Rx.umd.js"></script>  
+
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
@@ -16,32 +19,36 @@
     <body>
         <div class="container">
             <section class="todo">
-
-                @if (session('status'))        
-                    <ul class="todo-controls">
-                        <li>
-                            {{ session('status') }}
-                        </li>                                        
-                    </ul>                    
-                @endif                      
-
-                <ul class="todo-list">
-                    <form method="POST" action="/delete">
-                        @foreach ($items as $item)                        
-                            <li>  <!-- class="done" -->
-                                <input type="checkbox" name="items[]" value="{{$item->id}}" id="item-{{$item->id}}" /> <!-- checked disabled --> 
-                                <label class="toggle" for="item-{{$item->id}}"></label>
-                                {{$item->getContent()}}
-                            </li>
-                        @endforeach
-                        <li style="display:block;">
-                            <input type="submit" class="button" value="Delete"></input>         
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        </li>                                            
-                    </form>
+                <ul class="todo-controls">
+                    <li class="info">
+                        @if(!count($items))
+                            You're all done!
+                        @else
+                            You have {{count($items)}} left!
+                        @endif                        
+                    </li>
+                    @if (session('status'))        
+                    <li class="info">
+                        {{ session('status') }}
+                    </li>
+                    @endif                                        
+                </ul>                           
+                                          
+                <ul class="todo-list">            
+                    @foreach ($items as $item)                        
+                        <li>  <!-- class="done" -->
+                            <input type="checkbox" name="items[]" value="{{$item->id}}" id="item-{{$item->id}}" /> <!-- checked disabled --> 
+                            <label class="toggle" for="item-{{$item->id}}"></label>
+                            {{$item->getContent()}}
+                            <span id="delete-item-{{$item->id}}" style="display:none; float:right;">
+                                <a href="/delete/{{$item->id}}">( delete )</a>
+                            </span>
+                        </li>
+                    @endforeach                   
                     <li style="display:block;">
                         <form method="POST" action="/new">
-                            <input type="text" name="text" id="add-text"></input>
+                            Enter new item details: </br>
+                            <input type="text" name="text" id="add-text" style="width: 75%" ></input>
                             <input type="submit" class="button" value="Add new"></input> 
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         </form>                        
@@ -49,5 +56,7 @@
                 </ul>                
             </section>
         </div>
+
+        <script src="/js/app.js"></script>          
     </body>
 </html>

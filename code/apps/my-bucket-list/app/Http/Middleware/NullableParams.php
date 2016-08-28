@@ -3,7 +3,6 @@
 use Log;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use PhpOption\Option as Nullable;
 
 /**
@@ -12,14 +11,19 @@ use PhpOption\Option as Nullable;
  */
 class NullableParams {
 
-	public function handle(Request $request, Closure $next, string $inputParam = 'input'): RedirectResponse {
+	public function handle(Request $request, Closure $next, string $inputParam = 'input') {
         
-		$nullables = array_map(function ($id) {
-			return Nullable::fromValue($id);
-		}, $request->input($inputParam));
+        $value = $request->input($inputParam);
 
-		$request->merge(['items' => $nullables]);
-
+        if(!is_array($value)) {
+        	$request->merge([$inputParam => Nullable::fromValue($value)]);
+        }
+        else {
+        	$nullables = array_map(function ($id) {
+				return Nullable::fromValue($id);
+			}, $value);	
+			$request->merge([$inputParam => $nullables]);
+        }
         return $next($request);
     }    
 }
