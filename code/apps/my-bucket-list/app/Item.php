@@ -2,6 +2,7 @@
 
 use PhpOption\Option as Nullable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\State;
 
 class Item extends Model {
@@ -36,8 +37,8 @@ class Item extends Model {
         return $this;
     }
 
-    public function state() {
-    	return $this->belongsTo(State::class);
+    public function state(): HasOne {
+    	return $this->hasOne(State::class, 'id', 'state_id');
     }
 
     public static function findNullable(int $id): Nullable {

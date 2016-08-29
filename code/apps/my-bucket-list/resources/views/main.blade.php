@@ -6,10 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>My Bucket List | Home</title>
-
-        <!-- RxJS -->
-        <script src="https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.11/dist/global/Rx.umd.js"></script>  
-
+        
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
@@ -21,21 +18,21 @@
             <section class="todo">
                 <ul class="todo-controls">
                     <li class="info">
-                        @if(!count($items))
+                        @if(!$remaining_item_count)
                             You're all done!
                         @else
-                            You have {{count($items)}} left!
+                            You have {{$remaining_item_count}} left!
                         @endif                        
                     </li>
                     @if (session('status'))        
-                    <li class="info">
+                    <li id="info-panel">
                         {{ session('status') }}
                     </li>
                     @endif                                        
                 </ul>                           
                                           
                 <ul class="todo-list">            
-                    @foreach ($items as $item)                        
+                    @foreach ($items as $item)                                                
                         @if($item->state->getShortName() === 'completed')
                             <li class="done">
                                 <input type="checkbox" name="items[]" value="{{$item->id}}" id="item-{{$item->id}}" checked disabled/> 
@@ -68,6 +65,11 @@
             </section>
         </div>
 
+        <!-- Fucntional Libs -->
+        <script src="https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.11/dist/global/Rx.umd.js"></script>  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.22.1/ramda.min.js"></script>
+        
+        <!-- Main app -->
         <script src="/js/app.js"></script>          
     </body>
 </html>

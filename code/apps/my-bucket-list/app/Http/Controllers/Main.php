@@ -39,8 +39,16 @@ class Main extends Controller {
 
         // allow functions into with clauses
 
-        
-        return view('main')->with('items', Item::all());
+        $allItems = Item::all();
+        $countPendingItems = P::compose(
+            'P::size', 
+            P::filter(
+                P::compose(P::eq('new'), function ($item) {return $item->state->getShortName();}))
+            );
+
+        return view('main')
+            ->with('items', $allItems)
+            ->with('remaining_item_count', $countPendingItems($allItems));
     }
 
     /**
@@ -130,7 +138,7 @@ class Main extends Controller {
 
         return response()->json([
             'status' => $status,
-            'id' => "item-${$id}"
+            'id' => $id
         ]);
     }
 }
