@@ -79,7 +79,11 @@
                 </div>
 
                 <div class="links">
-                    <a href="/main">Begin</a>                    
+                    @if($stats[0] > 0 || $stats[1] > 0)
+                        <a href="/main">Resume ({{$stats[0]}}, {{$stats[1]}})</a>                    
+                    @else
+                        <a href="/main">Begin</a>                        
+                    @endif
                 </div>
             </div>
         </div>

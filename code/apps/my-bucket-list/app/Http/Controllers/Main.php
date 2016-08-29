@@ -31,16 +31,9 @@ class Main extends Controller {
      * GET
      */
     public function __invoke(): View {
-        // $point = Tuple::create('double', 'double');
-
-        // $point(1.0, 2.5); // Tuple(1, 2.5)
-
-        // Log::info('Point is: '. $point(1.5, 3.0)[1]); // 3.0
-
-        // allow functions into with clauses
 
         $allItems = Item::all();
-        $countPendingItems = P::compose(
+        $newItems = P::compose(
             'P::size', 
             P::filter(
                 P::compose(P::eq('new'), function ($item) {return $item->state->getShortName();}))
@@ -48,7 +41,8 @@ class Main extends Controller {
 
         return view('main')
             ->with('items', $allItems)
-            ->with('remaining_item_count', $countPendingItems($allItems));
+            ->with('remaining_item_count', $newItems($allItems))
+            ;
     }
 
     /**

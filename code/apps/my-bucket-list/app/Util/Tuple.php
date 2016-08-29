@@ -19,7 +19,7 @@ class Tuple extends \SplFixedArray {
 
     public function offsetSet($offset, $value) {
         if (!$this->isValid($offset, $value)) {
-            throw new RuntimeException;
+            throw new \RuntimeException();
         }
 
         return parent::offsetSet($offset, $value);
