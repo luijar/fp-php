@@ -32,12 +32,15 @@ class Main extends Controller {
      */
     public function __invoke(): View {
 
+        $extractShorName = function ($item) {
+            return $item->state->getShortName();
+        };
+
         $allItems = Item::all();
-        $newItems = P::compose(
-            'P::size', 
-            P::filter(
-                P::compose(P::eq('new'), function ($item) {return $item->state->getShortName();}))
-            );
+        $newItems = P::pipe(
+            P::filter(P::pipe($extractShorName, P::eq('new'))),
+            'P::size'             
+        );
 
         return view('main')
             ->with('items', $allItems)
