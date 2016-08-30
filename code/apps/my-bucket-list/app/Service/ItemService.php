@@ -27,11 +27,11 @@ class ItemService {
 	 * @return Tuple(int, int, int)
 	 */
 	public static function countNewAndDoneItems(): Tuple {
-		$allItems = Item::all();
+		
         $countNewAndPast = P::partition(function ($item) {
         	$name = $item->state->getShortname();
         	return $name === 'expired' || $name === 'completed';
-        }, $allItems);
+        }, Item::all());
 
         list($done, $new) = $countNewAndPast;
         $counts = Tuple::create('integer', 'integer');

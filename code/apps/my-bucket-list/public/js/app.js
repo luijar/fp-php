@@ -1,7 +1,7 @@
 const items = document.querySelectorAll('input[type="checkbox"]');
 
 Rx.Observable.fromEvent(items, 'change')
-    .bufferTime(4000)
+    .bufferTime(3000)
     .switchMap(changedItems => Rx.Observable.from(changedItems))
     .map(event => ({id: extractId(event.target.id), status: event.target.checked}))
     .do(event => console.log(`Sending complete request for ${event.id}`))
@@ -13,7 +13,8 @@ Rx.Observable.fromEvent(items, 'change')
 				let elem = document.querySelector(`#delete-item-${id}`);
 				elem.style.display = 'inline';
 				elem.parentElement.className = 'done';					
-				elem = document.querySelector(`#item-${id}`).disabled = true;
+				document.querySelector(`#item-${id}`).disabled = true;				
+				document.querySelector(`#content-${id}`).className = 'list-item-strike';
 			}
 		}	
 	);

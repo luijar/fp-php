@@ -66,8 +66,6 @@ class Main extends Controller {
      */
     public function deleteItems(Request $request): RedirectResponse {
 
-        $nullableItems = $request->input('items');
-
         array_map(function ($nul_id) {
             return $nul_id->reject('')
                     ->map('intval')
@@ -80,7 +78,7 @@ class Main extends Controller {
                         Log::info('Invalid item ID. Skipping delete...');
                         return 0;
                     });
-        }, $nullableItems);
+        }, $request->input('items'));
 
         return redirect('/main')->with('status', 'Items deleted!');
     }
