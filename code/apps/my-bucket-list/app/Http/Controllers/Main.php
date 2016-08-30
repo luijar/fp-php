@@ -16,20 +16,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Main Web Handlers
+ * @author Luis Atencio
+ */
 class Main extends Controller {
   
-    /*
-    |--------------------------------------------------------------------------
-    | Web Handlers
-    |--------------------------------------------------------------------------
-    |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
-    */
-    /**
-     * GET
-     */
+    //GET
     public function __invoke(): View {
 
         $extractShorName = function ($item) {
@@ -48,9 +41,7 @@ class Main extends Controller {
             ;
     }
 
-    /**
-     * POST
-     */
+    //POST
     public function newItem(Request $request): RedirectResponse {
 
         $newItem = Nullable::fromValue($request->input('text'))
@@ -64,9 +55,7 @@ class Main extends Controller {
         return redirect('/main')->with('status', 'New item added!');
     }
 
-    /**
-     * POST
-     */
+    //POST
     public function deleteItems(Request $request): RedirectResponse {
 
         array_map(function ($nul_id) {
@@ -86,9 +75,7 @@ class Main extends Controller {
         return redirect('/main')->with('status', 'Items deleted!');
     }
 
-    /**
-     * GET
-     */
+    //GET
     public function deleteItem($id): RedirectResponse {
 
         $count = Nullable::fromValue($id)
@@ -107,9 +94,7 @@ class Main extends Controller {
         return redirect('/main')->with('status', "{$count} item deleted!");      
     }
 
-    /**
-     * POST
-     */
+    //POST
     public function completeItem($id): JsonResponse {
         
         $status = Nullable::fromValue($id)
