@@ -67,7 +67,7 @@
         </div>
 
         <!-- Fucntional Libs -->
-        <script src="https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.11/dist/global/Rx.umd.js"></script>  
+        <script src="https://unpkg.com/@reactivex/rxjs@5.0.0-beta.11/dist/global/Rx.umd.js"></script>  
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.22.1/ramda.min.js"></script>
         
         <!-- Main app -->
