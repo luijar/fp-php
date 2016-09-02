@@ -58,7 +58,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.76367532"
-     inkscape:cx="469.35332"
+     inkscape:cx="446.43782"
      inkscape:cy="404.34454"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -78,7 +78,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -105,103 +105,73 @@
     <path
        sodipodi:type="arc"
        style="fill:#aebbb1;fill-opacity:1;fill-rule:evenodd;stroke:#aebbb1;stroke-opacity:1"
-       id="path4935"
-       sodipodi:cx="289.38998"
-       sodipodi:cy="400.36203"
-       sodipodi:rx="35.355339"
-       sodipodi:ry="29.462782"
-       d="m 324.74532,400.36203 a 35.355339,29.462782 0 1 1 -70.71067,0 35.355339,29.462782 0 1 1 70.71067,0 z"
-       transform="matrix(1.2013645,0,0,1.1305263,-29.028299,77.659302)" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#aebbb1;fill-opacity:1;fill-rule:evenodd;stroke:#aebbb1;stroke-opacity:1"
-       id="path4935-5"
-       sodipodi:cx="289.38998"
-       sodipodi:cy="400.36203"
-       sodipodi:rx="35.355339"
-       sodipodi:ry="29.462782"
-       d="m 324.74532,400.36203 a 35.355339,29.462782 0 1 1 -70.71067,0 35.355339,29.462782 0 1 1 70.71067,0 z"
-       transform="matrix(1.2013645,0,0,1.1305263,128.54306,77.659302)" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#aebbb1;fill-opacity:1;fill-rule:evenodd;stroke:#aebbb1;stroke-opacity:1"
-       id="path4935-1"
-       sodipodi:cx="289.38998"
-       sodipodi:cy="400.36203"
-       sodipodi:rx="35.355339"
-       sodipodi:ry="29.462782"
-       d="m 324.74532,400.36203 a 35.355339,29.462782 0 1 1 -70.71067,0 35.355339,29.462782 0 1 1 70.71067,0 z"
-       transform="matrix(1.2013645,0,0,1.1305263,-186.59964,77.659302)" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#aebbb1;fill-opacity:1;fill-rule:evenodd;stroke:#aebbb1;stroke-opacity:1"
        id="path4935-5-6"
        sodipodi:cx="289.38998"
        sodipodi:cy="400.36203"
        sodipodi:rx="35.355339"
        sodipodi:ry="29.462782"
        d="m 324.74532,400.36203 a 35.355339,29.462782 0 1 1 -70.71067,0 35.355339,29.462782 0 1 1 70.71067,0 z"
-       transform="matrix(1.2013645,0,0,1.1305263,286.11434,77.659302)" />
+       transform="matrix(0.96788039,0,0,1.1305263,355.946,78.102832)" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="99.994392"
+       x="96.449524"
        y="648.77631"
        id="text4991"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4993"
-         x="99.994392"
+         x="96.449524"
          y="648.77631"
-         style="fill:#efefef;fill-opacity:1">PHP 4</tspan></text>
+         style="fill:#000000;fill-opacity:1">PHP 4</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="113.91041"
+       x="110.36554"
        y="456.28607"
        id="text4991-9"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4993-8"
-         x="113.91041"
+         x="110.36554"
          y="456.28607"
-         style="fill:#efefef;fill-opacity:1">2000</tspan></text>
+         style="fill:#000000;fill-opacity:1">2000</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="260.53729"
+       x="250.79944"
        y="648.53217"
        id="text4991-8"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4993-9"
-         x="260.53729"
+         x="250.79944"
          y="648.53217"
-         style="fill:#efefef;fill-opacity:1">PHP 5</tspan></text>
+         style="fill:#000000;fill-opacity:1">PHP 5</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="274.5412"
+       x="264.80334"
        y="456.28607"
        id="text4991-9-8"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4993-8-2"
-         x="274.5412"
+         x="264.80334"
          y="456.28607"
-         style="fill:#efefef;fill-opacity:1">2009</tspan></text>
+         style="fill:#000000;fill-opacity:1">2009</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="419.12976"
+       x="415.9082"
        y="648.59076"
        id="text4991-8-4"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4993-9-7"
-         x="419.12976"
+         x="415.9082"
          y="648.59076"
-         style="fill:#efefef;fill-opacity:1">PHP 6</tspan></text>
+         style="fill:#000000;fill-opacity:1">PHP 6</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
@@ -213,19 +183,19 @@
          id="tspan4993-9-7-8"
          x="577.91589"
          y="648.77631"
-         style="fill:#efefef;fill-opacity:1">PHP 7</tspan></text>
+         style="fill:#000000;fill-opacity:1">PHP 7= strict types</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-       x="433.10437"
+       x="429.88281"
        y="456.28607"
        id="text4991-9-8-6"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4993-8-2-0"
-         x="433.10437"
+         x="429.88281"
          y="456.28607"
-         style="fill:#efefef;fill-opacity:1">2014</tspan></text>
+         style="fill:#000000;fill-opacity:1">2014</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
@@ -237,7 +207,7 @@
          id="tspan4993-8-2-0-0"
          x="591.85144"
          y="456.28607"
-         style="fill:#efefef;fill-opacity:1">2016</tspan></text>
+         style="fill:#000000;fill-opacity:1">2016</tspan></text>
     <path
        style="fill:none;stroke:#aebbb1;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:15,5;stroke-dashoffset:0"
        d="m 396.76547,69.724126 c 0,333.911534 0,335.220994 0,335.220994"
@@ -255,7 +225,7 @@
          id="tspan4993-9-3"
          x="341.15195"
          y="762.64044"
-         style="fill:#efefef;fill-opacity:1">PHP 5.3 = OOP + FP</tspan></text>
+         style="fill:#000000;fill-opacity:1">PHP 5.3 = OOP + FP</tspan></text>
     <path
        sodipodi:type="arc"
        style="fill:#e29298;fill-opacity:1;fill-rule:evenodd;stroke:#f30b2a;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:15, 5;stroke-dashoffset:0"
@@ -265,6 +235,36 @@
        sodipodi:rx="34.045883"
        sodipodi:ry="29.462782"
        d="m 281.53326,519.52258 a 34.045883,29.462782 0 1 1 -68.09176,0 34.045883,29.462782 0 1 1 68.09176,0 z"
-       transform="matrix(0.69189256,0,0,0.79952028,224.87607,116.48416)" />
+       transform="matrix(0.69189256,0,0,0.79952028,224.87607,115.3538)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#aebbb1;fill-opacity:1;fill-rule:evenodd;stroke:#aebbb1;stroke-opacity:1"
+       id="path4935-5-6-6"
+       sodipodi:cx="289.38998"
+       sodipodi:cy="400.36203"
+       sodipodi:rx="35.355339"
+       sodipodi:ry="29.462782"
+       d="m 324.74532,400.36203 a 35.355339,29.462782 0 1 1 -70.71067,0 35.355339,29.462782 0 1 1 70.71067,0 z"
+       transform="matrix(0.96788039,0,0,1.1305263,193.92855,78.102832)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#aebbb1;fill-opacity:1;fill-rule:evenodd;stroke:#aebbb1;stroke-opacity:1"
+       id="path4935-5-6-4"
+       sodipodi:cx="289.38998"
+       sodipodi:cy="400.36203"
+       sodipodi:rx="35.355339"
+       sodipodi:ry="29.462782"
+       d="m 324.74532,400.36203 a 35.355339,29.462782 0 1 1 -70.71067,0 35.355339,29.462782 0 1 1 70.71067,0 z"
+       transform="matrix(0.96788039,0,0,1.1305263,28.936963,78.102832)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#aebbb1;fill-opacity:1;fill-rule:evenodd;stroke:#aebbb1;stroke-opacity:1"
+       id="path4935-5-6-0"
+       sodipodi:cx="289.38998"
+       sodipodi:cy="400.36203"
+       sodipodi:rx="35.355339"
+       sodipodi:ry="29.462782"
+       d="m 324.74532,400.36203 a 35.355339,29.462782 0 1 1 -70.71067,0 35.355339,29.462782 0 1 1 70.71067,0 z"
+       transform="matrix(0.96788039,0,0,1.1305263,-125.57896,78.102832)" />
   </g>
 </svg>
