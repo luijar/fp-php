@@ -16,8 +16,8 @@ If you don't know that PHP also supports writing functional code, then you downl
 ##Which PHP version to use?
 
 
-
-![PHP Language timeline](images/timeline.png =500x200)
+{width=50%,float=center}
+![PHP Language timeline](images/timeline.png)
 
 But before we embark on this exciting journey, you need to learn why thinking functionally is important and how it can help you tackle the complexities of PHP programs.
 ##Hello FP
