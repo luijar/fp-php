@@ -14,7 +14,7 @@
 
 	$data = [1,2,3,4,5,6,7,8,9];
 
-	array_reduce(
+	$result = array_reduce(
 		array_map(function ($evenNum) {
 			return $evenNum * $evenNum;
 			},
@@ -65,7 +65,37 @@
 	$run = Combinators::compose($addExclamation, $repeat3, $concat2);
 
 	println($run('Hello', 'FP'));
+// ------------------------------------------------//
 
+// Excersise 1.1
+	function toFile($filename) {
+		return function ($message) use ($filename) {
+			$file = fopen($filename, 'w');	 
+	    	return fwrite($file, $message);	
+		};
+	}
+
+
+	$run = Combinators::compose(toFile('ch01.txt'), $repeat3, 'htmlentities');
+
+	println($run('Functional PHP <i>Rocks!</i>'));
+
+	function add($a, $b) {
+		return $a + $b;
+	}
+	
+	// Excersise 1.2
+
+	$array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+	$square = function ($num) {
+   		return pow($num, 2);
+	};
+	
+	$result = array_reduce(array_map($square, $array), 'add');
+	println('Map->Reduce: '. $result);	
+	
+	die();
 // ------------------------------------------------//
 
 // Excersise 2

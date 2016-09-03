@@ -1,7 +1,3 @@
-#Data Flows
+#Point-free Data Flows
 
 Under Construction
-
-first / last which returns the first, respectively last, element of an array matching the predicate
-any which returns true as soon as one element matches the predicate
-all which returns true if all elements matches the predicate
