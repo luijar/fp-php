@@ -87,17 +87,39 @@ function add($a, $b) {
 Now, without fiddling with the internals of the function, I use the adder to reduce the array into a single number: 
 ~~~
 array_reduce(array_map($square, $array), 'add'); //-> 285~~~Comparing this code to the imperative version, you see that you’ve freed yourself from the responsibility of properly managing a loop counter and array index access; put simply, the more code you have, the more places there are for bugs to occur. Also, standard loops are not reusable artifacts, only when they are abstracted within functions. Abstracting loops with functions will allow you to take advantage of PHP's *anonymous function syntax* and *closures*. 
-##You can never step into same river twiceFunctions like `array_map()` have other benefits: they are immutable, which means it doesn't change the contents of the original array. 
-Coding with immutable variables has many benefits: 
-1. Immutable objects can be passed around to any function and their states won't change, which is one of the main reasons we have so many bugs in our code. So, you always have the piece of mind that state is only permitted to grow but never change. It eases the "congnitive load" (the amount of state to keep track of in your head) when running through any single component of your system. 
-, This is extremely important in multithreaded applications where threads share a common resource, but because this scenario is not that common in PHP, since it's a stateless platform, we won't discuss the benefits of FP in terms of concurrency. Nevertheless, because functional programs aim for statelessness and immutability as much as possible, your code has zero chance of changing or breaking global state that other functions might need within the same execution thread. This is not a new concept and has been used a lot before. For example, as a best practice, Symfony services (or service objects) should always be stateless. A [service](https://igor.io/2013/03/31/stateless-services.html) is the perfect object-oriented equivalent of a functional programming artifact. In domain-driven design, services shouldn't persist any state and provide a set of transient functions that take in the domain its working on, perform some kind of computation of business logic (the service), and return the result.  
-Done correctly, we say that services are pure. To understand this, let's talk about pure functions.
-##Pure functions to fix side effectsFunctional programming is based on the premise that you will build immutable programs based on pure functions as the building blocks of your business logic. A pure function has the following qualities:
-* It depends only on the input provided and not on any hidden or external state that may change during its evaluation or between calls.* It doesn’t inflict changes beyond their scope, like modifying a global object or a parameter passed by reference, after its run.
-Intuitively, any function that does not meet these requirements would be qualified as “impure.” For example, while services are pure objects, repository or data access objects (DAO)  aren't. DAOs will always inflict side effects because their sole purpose is to interact with an external resource, the database. I'll revisit functional programming and domain-driven design later in this book.
-Programming with immutability can feel rather strange at first. After all, the whole point of imperative design, which is what we’re accustomed to, is to declare that variables are to mutate from one statement to the next (they are “variable” after all). PHP doesn't make any distinctions between *values* (immutable variables) and standard variables--they're all declared with a "$" dollar sign. This is a very natural thing for us to do. Consider the following function~~~$counter = 0; // resides somewhere in the global space (possibly in a different script)                    
+##Designing for immutability and statelessnessFunctions like `array_map()` have other benefits: they are immutable, which means it doesn't change the contents of the original array that's passed to it. 
+Coding with immutable variables has many benefits such as: 
+1. One of the main causes of bugs in software is when the state of an object inadvertently changes, or its reference becomes null. Immutable objects can be passed around to any function and their states will always remain the same. You can count on having the peace mind that state is only permitted to grow but never change. It eases the "congnitive load" (the amount of state to keep track of in your head) of any single component of your system. 
+2. Immutable data structures are important in shared memory multithreaded applications. We won't talk much about concurrent processing in this book because PHP processes run in isolation for the most part.  Now, whether designing for parallelism or not, stateless objects is a widely used pattern seen in many common PHP deployments. For example, as a best practice, Symfony services (or service objects) should always be stateless. A [service](https://igor.io/2013/03/31/stateless-services.html) shouldn't persist any state and provide a set of transient functions that take in the domain its working on, perform some kind of computation of business logic, and return the result.  
+Unfortunately, unlike Scala, F#, and others, PHP provides very poor support for immutable variables. You're only options really are using the `define` function or `const` keyword. Here's a quick comparison of the two:
+* `const` are defined at compile time, which means compilers can be clever about how to store them, but you can't conditionally declare them (which is a good thing). The following fails in PHP 7:
 
-... function increment() {   GLOBAL $counter;   return ++$counter;    }~~~You can also encouter side effects by accessing instance state as well: 
+~~~
+if (<some condition>) { 
+   const C1 = 'FOO';
+}
+else {
+   const C2 = 'BAR';
+}~~~* Constants declared with 'define' are a bit more versatile and dynamic. Because the compiler won't attempt to allocate space for them until it actually sees them. So you can do this: 
+~~~
+if (<some condition>) { 
+   define('C1', 'FOO');
+}
+else {
+   define('C2', 'BAR');
+}~~~But you should always check if a constant has been defined with `defined($name)` before accessing its value using `constant($name)`. * `const` properly scopes constants into the namespace you're class resides in. `define` will scope constants globally by default, unless the namespace is explicitly added.  * `const` behaves like any other variable declaration, which means it's case sensitive and requires a valid variable name. Because `define` is a function, you can use it to create constants with arbitrary expressions and also declare them to be case insensitive if you wish to do so. 
+All things considered, `const` is much better to use because it's an actual keyword and not just a function call, which is what constants should be. Perhaps in the future,  PHP moves in the direction of allowing this class-level only feature to be used anywhere to define an entity that can ony be assigned once, whether it be a variable or function:
+
+~~~const $square = function ($num) {
+   return pow($num, 2);
+};
+~~~  Of course, as it is now, it's unrealistic to expect that we declare all of our variables using `define`. But you can get close to achieving stateless programs, just like those Symfony services we spoke of earlier, using pure functions.
+##Pure functions fix side effectsFunctional programming is based on the premise that you will build immutable programs based on pure functions as the building blocks of your business logic. A pure function has the following qualities:
+* It depends only on the input provided and not on any hidden or external state that may change during its evaluation or between calls.* It doesn’t inflict changes beyond its scope, like modifying a global object or a parameter passed by reference, after its run.
+Intuitively, any function that does not meet these requirements would be qualified as “impure.” For example, while services are pure objects, repository or Data Access Objects (DAO)  aren't. This includes your Laravel Active Record objects, for example. Operations in DAOs always cause side effects because their sole purpose is to interact with an external resource, the database.
+Programming with immutability can feel rather strange at first. After all, the whole point of imperative design, which is what we’re accustomed to, is to declare that variables are to mutate from one statement to the next (they are “variable” after all). PHP doesn't make any distinctions between *values* (immutable variables) and standard variables--they're all declared with the same "$" dollar sign. This is a very natural thing for us to do. Consider the following function that reads and modifies a global variable: ~~~$counter = 0; // resides somewhere in the global space (possibly in a different script)                    
+
+... function increment() {   GLOBAL $counter;   return ++$counter;    }~~~You can also encouter side effects by accessing instance state through `$this`: 
 
 ~~~class Counter {
    private $_counter;   
@@ -110,10 +132,13 @@ array_reduce(array_map($square, $array), 'add'); //-> 285~~~Comparing this c
       return ++$this->_counter;
    }}
 ~~~
-With only limited support for constant primitive values in classes and interfaces (via the `const` keyword), PHP does nothing to enforce that data be stored immutably (unlike Scala, F#, and others). However, with a bit of discipline we can go a very long way. One thing we can do is stop using global variables and the `GLOBAL` mechanism in PHP. This is not only bad practice from a functional point of view, but also a bit frowned upon in modern PHP applications. A function like `increment` is impure as it reads/modifies an external variable `$counter`, which is not local to the function’s scope (it could actually live in a complete different file). This also applies to instance methods, but I'll defer how to get around these side effects to the next chapter. 
-Generally, functions have side effects when reading from or writing to external resources. 
-![Increment function with side effects](images/side_effect.png)Side effects are also a bad design because it causes your functions to be *temporally coupled* or dependent, which means the execution of one can determine the outcome of the next. In functional programming, functions are reusable artifacts that can be evaluated in any order and continue to yield correct results. 
 
+With a bit of discipline we can go a very long way. One thing we can do is stop using global variables and the `GLOBAL` mechanism in PHP. This is not only considered bad practice from a functional point of view, but also a bit frowned upon in modern PHP applications. A function like `increment` is impure as it reads/modifies an external variable `$counter`, which is not local to the function’s scope (it could actually live in a complete different file). This also applies to instance methods, but I'll defer how to get around these side effects to the next chapter.
+Generally speaking, functions have side effects when reading from or writing to external resources. 
+
+{width=50%,float=center}![Increment function with side effects](images/side_effect.png)Side effects are also a bad design because it causes your functions to be *temporally coupled* or dependent, which means the execution of one can determine the outcome of the next. In functional programming, functions are reusable artifacts that can be evaluated in any order and continue to yield correct results. 
+
+{width=50%,float=center}
 ![Temporal coupling](images/side_effect2.png)
 Side effects can be very ubiquitous. At a theoretical level, a side effect could be one of the following: 
 * Changing a variable, property or data structure globally
