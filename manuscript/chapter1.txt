@@ -52,8 +52,8 @@ fwrite($file, 'Hello FP!'); //-> writes 'Hello FP'~~~This program is very sim
 ~~~function toFile($filename, $message) {    $file = fopen($filename, 'w');	     return fwrite($file, $message. ' ' . $message);}toFile('ch01.txt', 'Hello FP'); //-> writes 'Hello FP Hello FP'~~~
 This simple thought process of creating parameterized functions to carry out simple tasks is a step in the right direction; however, it would be nice to minimize reaching into your core logic to support slight changes in requirements. We need to make our code more *extensible*. Thinking functionally involves treating parameters as not just simple scalar values but  also as functions themselves that provide additional functionality; it also involves using functions or (*callables*) as just pieces of data that can be passed around anywhere. The end result is that we end up evaluating and combining lots of functions together that individually don't add much value, but together solve entire programs. I'll make a slight transformation to the function `toFile`:
 ~~~
-function toFile($filename) {
-	return function ($message) use ($filename) {
+function toFile($filename): callable {
+	return function ($message) use ($filename): int {
 		$file = fopen($filename, 'w');	 
 	    return fwrite($file, $message);	
 	};
@@ -77,12 +77,12 @@ for($i = 0; $i < count($array); $i++) {
 
 $array; //-> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]~~~Imperative programming tells the computer, in great detail, how to perform a certain task (looping through and applying the square formula to each number, in this case). This is the most common way of writing this code and most likely will be your first approach to tackling this problem. 
 Declarative programming, on the other hand, *separates program description from evaluation*. It focuses on the use of expressions to describe what the logic of a program is or what output would look like without necessarily specifying its control flow or state changes. This is done with the use of higher-order functions that establish a certain vocabulary based on a few set of primitives like filter, map, reduce, zip, compose, curry, lift, etc. These are just some of the common terms used a lot with FP that you'll learn about in this book. Once you employ this vocabulary to concot the instructions (subroutines, functions, procedures, etc) that make up your program, the PHP runtime translates this higher level of abstraction into regular PHP code: Shifting to a functional approach to tackle this same task, you only need to be concerned with applying the correct behavior at each element and cede control of looping to other parts of the system. I can let PHP's `array_map()` do the work:~~~
-$square = function ($num) {
+$square = function (int $num): int {
    return pow($num, 2);
 };
 array_map($square, $array);  //-> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]~~~The function `array_map()` also works with *callables* or functions just like the `compose` function shown earlier. Notice a trend? No? Consider this example. Suppose we also needed to add all of the values within the array. So, we need `add` function:
 ~~~
-function add($a, $b) {
+function add(float $a, float $b): float {
 	return $a + $b;
 }~~~
 Now, without fiddling with the internals of the function, I use the adder to reduce the array into a single number: 
@@ -111,50 +111,66 @@ else {
 }~~~But you should always check if a constant has been defined with `defined($name)` before accessing its value using `constant($name)`. * `const` properly scopes constants into the namespace you're class resides in. `define` will scope constants globally by default, unless the namespace is explicitly added.  * `const` behaves like any other variable declaration, which means it's case sensitive and requires a valid variable name. Because `define` is a function, you can use it to create constants with arbitrary expressions and also declare them to be case insensitive if you wish to do so. 
 All things considered, `const` is much better to use because it's an actual keyword and not just a function call, which is what constants should be. Perhaps in the future,  PHP moves in the direction of allowing this class-level only feature to be used anywhere to define an entity that can ony be assigned once, whether it be a variable or function:
 
-~~~const $square = function ($num) {
+~~~const $square = function (int $num): int {
    return pow($num, 2);
 };
-~~~  Of course, as it is now, it's unrealistic to expect that we declare all of our variables using `define`. But you can get close to achieving stateless programs, just like those Symfony services we spoke of earlier, using pure functions.
+~~~  Of course, as it is now, it's unrealistic to expect that we declare all of our variables using `define`. But you can get close to achieving stateless programs, just like those Symfony services we spoke about earlier, using pure functions.
 ##Pure functions fix side effectsFunctional programming is based on the premise that you will build immutable programs based on pure functions as the building blocks of your business logic. A pure function has the following qualities:
 * It depends only on the input provided and not on any hidden or external state that may change during its evaluation or between calls.* It doesn’t inflict changes beyond its scope, like modifying a global object or a parameter passed by reference, after its run.
 Intuitively, any function that does not meet these requirements would be qualified as “impure.” For example, while services are pure objects, repository or Data Access Objects (DAO)  aren't. This includes your Laravel Active Record objects, for example. Operations in DAOs always cause side effects because their sole purpose is to interact with an external resource, the database.
 Programming with immutability can feel rather strange at first. After all, the whole point of imperative design, which is what we’re accustomed to, is to declare that variables are to mutate from one statement to the next (they are “variable” after all). PHP doesn't make any distinctions between *values* (immutable variables) and standard variables--they're all declared with the same "$" dollar sign. This is a very natural thing for us to do. Consider the following function that reads and modifies a global variable: ~~~// resides somewhere in the global // space (possibly in a different script)
-                    $counter = 0; 
+$counter = 0; 
 
-... function increment() {   GLOBAL $counter;   return ++$counter;    }~~~You can also encouter side effects by accessing instance state through `$this`: 
+... function increment(): int {   GLOBAL $counter;   return ++$counter;    }~~~You can also encouter side effects by accessing instance state through `$this`: 
 
 ~~~class Counter {
    private $_counter;   
-   public function __construct($init) {
+   public function __construct(int $init) {
       $this->_counter = $init;
    }   
    
    ...
-   public function increment() {
+   
+   public function increment(): int {
       return ++$this->_counter;
    }}
 ~~~
 
-With a bit of discipline we can go a very long way. One thing we can do is stop using global variables and the `GLOBAL` mechanism in PHP. This is not only considered bad practice from a functional point of view, but also a bit frowned upon in modern PHP applications. A function like `increment` is impure as it reads/modifies an external variable `$counter`, which is not local to the function’s scope (it could actually live in a complete different file). This also applies to instance methods, but I'll defer how to get around these side effects to the next chapter.
-Generally speaking, functions have side effects when reading from or writing to external resources. 
+Because we don't have support for immutable variable modifiers, with a bit of discipline, we can still achieve the same goal. One thing we can do is stop using global variables and the `GLOBAL` mechanism in PHP. This is not only considered bad practice from a functional point of view, but also a bit frowned upon in modern PHP applications. A function like `increment` is impure as it reads/modifies an external variable `$counter`, which is not local to the function’s scope (it could actually live in a complete different file). 
 
-{width=50%,float=center}![Increment function with side effects](images/side_effect.png)Side effects are also a bad design because it causes your functions to be *temporally coupled* or dependent, which means the execution of one can determine the outcome of the next. In functional programming, functions are reusable artifacts that can be evaluated in any order and continue to yield correct results. 
+In addition, in the case of object methods, using `$this` is automatically accessing the methods's external instance scope. While this isn't nearly as bad as global scope, from a pure FP perspective, it's also a side effect.
 
+{width=50%,float=center}![Increment function with side effects](images/side_effect.png)Generally speaking, functions have side effects when reading from or writing to external resources. Matters get worse, when this state is shared: 
 {width=50%,float=center}
-![Temporal coupling](images/side_effect2.png)
-Side effects can be very ubiquitous. At a theoretical level, a side effect could be one of the following: 
+![Temporal coupling](images/side_effect2.png)In this case, `doWork` and `doMoreWork` are very tightly coupled. This coupling means that you necessarilly need to invoke `doWork` before calling `doMoreWork`, always in that order. Hence, you lose the autonomy of these functions and make them harder to unit test in isolation. Side effects create a  *temporal coupling* or dependency, which means the execution of one can determine the outcome of the next. The result of `doMoreWork` is reliant on `doWork`. In functional programming, functions should behave like reusable artifacts that can be evaluated in any order and continue to yield correct results. 
+Not all side effects are this obvious. Some of them are embedded into language level functions. Frankly, you should be wary of functions that use parameter references `&`, such as:
+
+~~~
+bool sort ( array &$array [, int $sort_flags = SORT_REGULAR ] )
+~~~ 
+
+Instead of returning a new sorted array, it sorts the array in place and returns a (arguably useless) boolean result: 
+
+~~~
+$original = ['z', 'a', 'g'];
+sort($original);
+$original; //-> ['a', 'g', 'z'];
+~~~
+
+Here are some other forms: 
 * Changing a variable, property or data structure globally
 * Changing the original value of a function’s argument
 * Processing user input
 * Throwing an exception, unless it’s caught within the same function
 * Printing to the screen or logging
-* Querying the HMTL documents, browser cookies, or databases 
-Now what practical value would you get from a program that couldn't do any of these things? Indeed, pure functions can be very hard to use in a world full of dynamic behavior and mutation-- the real world. But, to benefit from functional programming you don't need to avoid all of these; FP just provides a framework to help you manage these while allowing you to separate the pure from the impure. Impure code produces externally visible side effects like the ones listed above, and in this book we’ll examine ways to deal with this.
+* Querying the DOM of an HTML page and browser cookies
+* Writing to/reading from files and databases
+So, now you need to ask yourself: What practical value would you get from a program that couldn't do any of these things? Indeed, pure functions can be very hard to use in a world full of dynamic behavior and mutation-- the real world. But, to benefit from functional programming you don't need to avoid all of these; FP just provides a framework to help you manage/reduce sife effects by separating the pure code from the impure. Impure code produces externally visible side effects like the ones listed above, and in this book you'll learn ways to deal with this.
 
-For instance, I can easily refactor `increment` to declare that it requires you provide the current counter
+For instance, I can easily refactor `increment` to accept the current counter:
 
 ~~~
-function increment($counter) {
+function increment(int $counter): int {
    return ++$counter;    }
 ~~~
 This pure function is now not only immutable but also has a clear contract that describes clearly the information it needs to carry out its task, making it simpler to understand and use. This is a simple example, of course, but this level of reasoning can be taken to functions of any complexity. Generally, the goal is to create functions that do one thing and combine them together instead of creating large monolithic functions. 

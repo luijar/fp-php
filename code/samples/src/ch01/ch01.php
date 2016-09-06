@@ -68,8 +68,8 @@
 // ------------------------------------------------//
 
 // Excersise 1.1
-	function toFile($filename) {
-		return function ($message) use ($filename) {
+	function toFile($filename): callable {
+		return function ($message) use ($filename): int {
 			$file = fopen($filename, 'w');	 
 	    	return fwrite($file, $message);	
 		};
