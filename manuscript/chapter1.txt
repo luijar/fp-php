@@ -16,7 +16,7 @@ If you don't know that PHP also supports writing functional code, then you downl
 ##Which PHP version to use?
 As I mentioned before, you can implement a functional style using PHP 5.3+. This is around the time that the *Closure* class was added to the language (more on this later). However, there are good reasons for upgrading to PHP 7. Aside from it being much faster, matching the runtime speed of [Hack](http://hacklang.org/), and sometimes even better, the latest release adds [strict typing and scalar type declarations](http://php.net/manual/en/functions.arguments.php#functions.arguments.type-declaration). 
 
-{width=100px,height=50px,float=center}
+{float=center}
 ![Approx PHP language timeline](images/timeline.png)
 
 Type declarations allow you to qualify any function parameter with its proper class or scalar type (boolean, integer, string, MyClass, etc). These were partially supported in PHP 5 as "type hints" but without scalar support. In PHP 7, you can also declare the type of a function's return value. 
