@@ -174,71 +174,25 @@ function increment(int $counter): int {
    return ++$counter;    }
 ~~~
 This pure function is now not only immutable but also has a clear contract that describes clearly the information it needs to carry out its task, making it simpler to understand and use. This is a simple example, of course, but this level of reasoning can be taken to functions of any complexity. Generally, the goal is to create functions that do one thing and combine them together instead of creating large monolithic functions. 
-##Referential TransparencyWe can take the notion of purity further. In functional programming, we redefine what it means to create a function. In a sense we go back to basics, to the maths, and treat functions as nothing more than a mapping of types. In this case, its input types (arguments) to its output type (return value). Functions in mathematics are predictable and constant, i.e. they return the same values given the same input always. This is the quality sought out in functional programs and achievable through pure functions, known as *referential transparency (RT)*. An familiar example of a function not RT is `rand()`.  
-Referential transp	arency means just that. Your functions are to return the same values given the same input. Because there are no side effects, *a function's return value is directly derived from its input*. This makes our code not only easier to test, but also allows us to reason about entire programs much easier. Referential transparency (also known as equational correctness) is inherited from math, but functions in programming languages behave nothing like mathematical functions; so achieving referential transparency is strictly on us, especially in a non-pure functional language such as PHP. The benefit of doing is is that when your individual functions are predictable, your entire program is much easier to reason about, maintain, and debug, and especially test. Later on, you'll learn that functional programs are inherently testable, because referential transparency surfaces another principle of good tests, idempotent. An idempotent unit test is a fancy term to describe a unit test that's repeatable and consistent, so that for a given set of input you're guaranteed to compute the same output, always. This "contract" will then be documented as part of your test code; in essence, you get self-documenting code.
-
-##Benefits of thinking functionallyThe topics introduced in this section serve as a brief introduction to some of the upcoming chapters in the book; if a concept is hard to grasp now, don’t worry; it will become clearer as you progress through the rest of the chapters. 
-Now, let’s explore at a high level the benefits functional programming brings to your PHP code:
-* Decompose tasks into simple functions* Process data using fluent chains
-* Reduce complexity of asynchronous code###Decompose tasks into simple functions
-At the core, functional programming is effectively the interplay between decomposition (breaking programs into small pieces) and composition (glueing the pieces back together). It is this duality that makes functional programs modular and so effective. As I mentioned previously, the unit of modularity, or “unit of work” is the function itself. Thinking functionally typically begins with decomposition or learning to break up a particular task into logical subtasks (functions). Because the modularity boundary is the function, I can identify three components in the "Hello FP" program earlier
-
-![Decompose 'Hello FP'](images/decompose.png)Modularization in functional programming is closely related to the *Singularity* principle (one of the SOLID design principles), which states that functions should have a single purpose. In FP, we follow the guidelines for loosely coupled, highly cohesive functions. In other words, side effect free and single purpose. 
-Purity and referential transparency will encourage you to think this way because in order to glue simple functions together they must agree on their types of inputs and outputs as well as arity or number of arguments. In short, they must agree on their exposed contracts, which is very similar to the *Coding to Interfaces* OO design princinple. From referential transparency, we learn that a function’s complexity is sometimes directly related to the number of arguments it receives. A practical observation and not a formal concept indicates that the lower the number of function parameters, the simpler the function tends to be. ![Building a function pipeline](images/compose.png)This process is essentially what `compose` does. Also called a function combinator (for obvious reasons), `compose` can glue together functions in a loosely decoupled way by binding one function's output to the next one's input. This is essentially the same *coding to interfaces* but at a much lower level of granularity. I will refer to this as a function pipeline.###Process data using fluent chainsDeveloping function pipelines is not the only way to gain fluency in a declarative way. I can also use a *Fluent Object* design pattern. The reasons for doing this might not seem obvious at first, but bear with me as I introduce this pattern. Aside from side effect free functions, in FP variables must be immutable (which sounds odd, I know). Because PHP doesn't give us this out of the box, we have to use patterns to fill in the gap. One pattern we can use is wrapping containers around a value to controls its state. Consider a simple `Container` class
+##Referential TransparencyWe can take the notion of purity a step further. In functional programming, we redefine what it means to create a function. In a sense we go back to basics, to the maths, and treat functions as nothing more than a mapping of types. In this case, its input types (arguments) to its output type (return value). We'll use a pseudo Haskell notation throughout the book when document a function's signature. For example, `f :: A -> B` is a function `f` that takes an object of `A` and returns an object of type `B`. So, increment becomes: 
+~~~increment :: int -> int ~~~
+Essentially the arrow notation is used to define any callable. A function like `toFile`, which returns a function from another function, is defined as: 
 ~~~
-class Container {
-   private $_value;
-
-   private function __construct($value) {		
-      $this->_value = $value;				
-   }
-
-   // Unit function 
-   public static function of($val) {			
-      return new static($val);	
-   }
-   
-   // Map function	
-   public function map(callable $f) {	
-      return static::of(call_user_func($f, $this->_value));
-   }
-   
-   // Print out the container
-   public function __toString() {
-      return "Container[ {$this->_value} ]";  
-   }
-   
-   // Deference container
-   public function __invoke() {
-      return $this->_value;
-   }
-}~~~Containers wrap data and provide a mechanism to transform it immutably by enabling a mapping function. This is in many ways analogous to `array_map()`. For instance, I can apply a series of transformations on a string like this  ~~~$c = Container::of('</ Hello FP >')->map(htmlspecialchars)->map(strtolower);
-//-> Container[ &lt;/ hello fp &gt; ]
-~~~Notice how this looks much cleaner and easier to parse against nesting these function calls one insider other. Personally, I rather see code in a flattened out and linear model. Otherwise, it would look like this
-~~~
-strtolower(htmlspecialchars('</ Hello FP >')); //-> &lt;/ hello fp &gt;~~~I also added some PHP magic with `__invoke()` that can be used to dereference the container upon invocation
-~~~$c = Container::of('Hello FP')->map($repeat(2))->map(strlen);
-$c(); //-> 16
-~~~So, what's the use for this pattern? Earlier I mentioned that throwing exceptions, or for that matter, the imperative try/catch mechanism has side effects. Arguably, try/catch is also not very declarative and belongs in the same category as for loops and conditional statements. Containerizing values is an important design pattern in FP because it allows you to consolidate the logic of applying a function chain (sequence) of changes to some value immutably and side effect free. Later on, we'll see how this leads into the topic of *Monads*. 
-This can be used to implement error handling. Consider this scenario
-~~~$c = Container::of([1,2,3])->map(array_reverse);
-print_r($c()) //-> [3, 2, 1]~~~
-
-But if instead of a valid array, a `null` value was passed in, you will see: 
+toFile :: string -> string -> int~~~Functions in mathematics are predictable, constant, and work exactly like this. You can imagine that `A` and `B` are sets that represent the domain and the codomain of a function, respectively. For instance, the type `int` is analogous to the set of all integers Z. Functions that return the same values given the same input always, resembling this mathematical property, are known as *referentially transparent (RT)*. A RT function can always be directly substituted or replaced for its computed value into any expression without altering its meaning. In other words, these are all equivalent: 
 
 ~~~
-Warning: array_reverse() expects parameter 1 to be array, null given~~~One way to get around this is to make sure all functions you use (from PHP or custom) do some level of null-checking. But instead of repeating null-checks everywhere, wouldn't it be better to consolidate it all in once place? Consider the implementation for a `SafeContainer`
-~~~
-class SafeContainer extends Container {		
-   // Performs null checks
-   public function map(callable $f) {
-      if(!empty($this->_value)) {
-         return static::of(call_user_func($f, $this->_value));
-      }
-      return static::of(null); 			
-   }	
-}	~~~Now I don't have to worry about the error checking to permeate all of my business logic; it's all consolidated in one place
-~~~
-$c = SafeContainer::of(null)->map(array_reverse);
-print_r($c()); //-> Nothing~~~The best part about this is that your function chains look exactly the same, there's nothing extra on your part, so you can continue to map as many functions as you need and any errors will be propagated through the entire chain behind the scenes. ##So, what is functional programming?With all of this so far, we can pack its fundamental principles to arrive at the following definition:
+add(square(increment(4)), increment(16)) =~ add(square(5), 17) =~ add(25, 17) =~ 25 + 17 = 42
+~~~
+
+This means that you can use the value `42` in place of any of these expressions. This conclusion can only be reached when there are no side effects in your code. Using RT functions we derive the following corollary. Because there are no side effects, *a function's return value is directly derived from its input*. Consequentely, void functions `A -> ()` as well as zero-arg functions `() -> A` will typically perform side effects.
+This makes your code not only easier to test, but also allows you to reason about entire programs much easier. Referential transparency (also known as equational correctness) is inherited from math, but functions in programming languages behave nothing like mathematical functions; so achieving referential transparency is strictly on us, especially in a non-pure functional language such as PHP. The benefit of doing is is that when your individual functions are predictable, the sum of the parts is predictable and, hence, much easier to reason about, maintain, and debug, and especially test. 
+Later on, you'll learn that functional programs are inherently testable, because referential transparency surfaces another principle of good tests, idempotency. An idempotent unit test is a fancy term to describe a unit test that's repeatable and consistent, so that for a given set of input you're guaranteed to compute the same output, always. This "contract" will then be documented as part of your test code; in essence, you get self-documenting code.
+By now you realize why pure functions are the pillar of FP, but we have one more concept to introduce. If pure functions are the pillars, then composition is the base or the glue that makes up the entire system.
+
+##A look into functional decomposition
+At the core, functional programming is effectively the interplay between decomposition (breaking programs into small pieces) and composition (glueing the pieces back together). It is this duality that makes functional programs modular and so effective. As I mentioned previously, the unit of modularity, or “unit of work” is the function itself. Thinking functionally typically begins with decomposition or learning to break up a particular task into logical subtasks (functions). Because the modularity boundary is the function, we can identify three components in the "Hello FP" program earlier:
+
+{float=center}
+![Decompose 'Hello FP'](images/decompose.png)Modularization in functional programming is closely related to the *Singularity* principle (one of the SOLID design principles), which states that functions should have a single purpose. In FP, we follow the guidelines for loosely coupled, highly cohesive functions. In other words, side effect free and single purpose. 
+Purity and referential transparency will encourage you to think this way because in order to glue simple functions together they must agree on their types of inputs and outputs as well as arity or number of arguments. In short, they must agree on their exposed contracts, which is very similar to the *Coding to Interfaces* OO design princinple. From referential transparency, we learn that a function’s complexity is sometimes directly related to the number of arguments it receives. A practical observation and not a formal concept indicates that the lower the number of function parameters, the simpler the function tends to be. {float=center}![Building a function pipeline](images/compose.png)This process is essentially what `compose` does. Also called a function combinator (for obvious reasons), `compose` can glue together functions in a loosely decoupled way by binding one function's output to the next one's input. This is essentially the same *coding to interfaces* but at a much lower level of granularity. I will refer to this as a function pipeline.##To sum up, what is functional programming?With all of this so far, we can pack its fundamental principles to arrive at the following definition:
 "***Functional programming refers to the declarative evaluation of pure functions to create immutable programs by avoiding externally observable side effects.***"Hope you've enjoyed this brief introduction of some of the topics covered in this book. In the next chapters we'll learn what enables PHP to be used functionally. In particular, you'll learn about higher-order, first-class functions, and closures, and some practical examples of using each technique. This will set the stage for developing data flows using PHP arrays. So stay tuned!

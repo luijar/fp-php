@@ -209,6 +209,65 @@ Counter::increment(100); //-> 101
 ##Using containers improve your APIs
 Earlier you learned that returning NAN in the event that `divide` was called with a zero denominator led to a better API design because it freed your users from having to wrap their code in try/catch blocks. This is always a good thing  because exceptions should be thrown only when there's no recovery path. However, we can do better. Working with numbers and NAN doesn't really get you anywhere; for example, adding anything to NAN (ex. `1 + NAN`) returns NAN, and rightfully so. So, instead of burdening your users to place `is_nan` checks everywhere, why not consolidate this logic in one place. 
 
+Containers: 
+Developing function pipelines is not the only way to gain fluency in a declarative way. I can also use a *Fluent Object* design pattern. The reasons for doing this might not seem obvious at first, but bear with me as I introduce this pattern. Aside from side effect free functions, in FP variables must be immutable (which sounds odd, I know). Because PHP doesn't give us this out of the box, we have to use patterns to fill in the gap. One pattern we can use is wrapping containers around a value to controls its state. Consider a simple `Container` class
+~~~
+class Container {
+   private $_value;
+
+   private function __construct($value) {		
+      $this->_value = $value;				
+   }
+
+   // Unit function 
+   public static function of($val) {			
+      return new static($val);	
+   }
+   
+   // Map function	
+   public function map(callable $f) {	
+      return static::of(call_user_func($f, $this->_value));
+   }
+   
+   // Print out the container
+   public function __toString() {
+      return "Container[ {$this->_value} ]";  
+   }
+   
+   // Deference container
+   public function __invoke() {
+      return $this->_value;
+   }
+}~~~Containers wrap data and provide a mechanism to transform it immutably by enabling a mapping function. This is in many ways analogous to `array_map()`. For instance, I can apply a series of transformations on a string like this  ~~~$c = Container::of('</ Hello FP >')->map(htmlspecialchars)->map(strtolower);
+//-> Container[ &lt;/ hello fp &gt; ]
+~~~Notice how this looks much cleaner and easier to parse against nesting these function calls one insider other. Personally, I rather see code in a flattened out and linear model. Otherwise, it would look like this
+~~~
+strtolower(htmlspecialchars('</ Hello FP >')); //-> &lt;/ hello fp &gt;~~~I also added some PHP magic with `__invoke()` that can be used to dereference the container upon invocation
+~~~$c = Container::of('Hello FP')->map($repeat(2))->map(strlen);
+$c(); //-> 16
+~~~So, what's the use for this pattern? Earlier I mentioned that throwing exceptions, or for that matter, the imperative try/catch mechanism has side effects. Arguably, try/catch is also not very declarative and belongs in the same category as for loops and conditional statements. Containerizing values is an important design pattern in FP because it allows you to consolidate the logic of applying a function chain (sequence) of changes to some value immutably and side effect free. Later on, we'll see how this leads into the topic of *Monads*. 
+This can be used to implement error handling. Consider this scenario
+~~~$c = Container::of([1,2,3])->map(array_reverse);
+print_r($c()) //-> [3, 2, 1]~~~
+
+But if instead of a valid array, a `null` value was passed in, you will see: 
+
+~~~
+Warning: array_reverse() expects parameter 1 to be array, null given~~~One way to get around this is to make sure all functions you use (from PHP or custom) do some level of null-checking. But instead of repeating null-checks everywhere, wouldn't it be better to consolidate it all in once place? Consider the implementation for a `SafeContainer`
+~~~
+class SafeContainer extends Container {		
+   // Performs null checks
+   public function map(callable $f) {
+      if(!empty($this->_value)) {
+         return static::of(call_user_func($f, $this->_value));
+      }
+      return static::of(null); 			
+   }	
+}	~~~Now I don't have to worry about the error checking to permeate all of my business logic; it's all consolidated in one place
+~~~
+$c = SafeContainer::of(null)->map(array_reverse);
+print_r($c()); //-> Nothing~~~The best part about this is that your function chains look exactly the same, there's nothing extra on your part, so you can continue to map as many functions as you need and any errors will be propagated through the entire chain behind the scenes. 
+
 In this section, I want to bring back the concept of containers from chapter 1 and mix it with using higher-order functions. Recall that I can use containers to wrap any value and transform it in an immutable way (i.e. as the value inside the container changes, new containers are created keeping the original intact). Here's an example:
 
 ~~~$c = Container::of('</ Hello FP >')->map(htmlspecialchars)->map(strtolower);
