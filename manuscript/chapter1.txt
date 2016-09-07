@@ -140,8 +140,8 @@ Because we don't have support for immutable variable modifiers, with a bit of di
 
 In addition, in the case of object methods, using `$this` is automatically accessing the methods's external instance scope. While this isn't nearly as bad as global scope, from a pure FP perspective, it's also a side effect.
 
-{width=50%,float=center}![Increment function with side effects](images/side_effect.png)Generally speaking, functions have side effects when reading from or writing to external resources. Matters get worse, when this state is shared: 
-{width=50%,float=center}
+{float=center}![Increment function with side effects](images/side_effect.png)Generally speaking, functions have side effects when reading from or writing to external resources. Matters get worse, when this state is shared: 
+{float=center}
 ![Temporal coupling](images/side_effect2.png)In this case, `doWork` and `doMoreWork` are very tightly coupled. This coupling means that you necessarilly need to invoke `doWork` before calling `doMoreWork`, always in that order. Hence, you lose the autonomy of these functions and make them harder to unit test in isolation. Side effects create a  *temporal coupling* or dependency, which means the execution of one can determine the outcome of the next. The result of `doMoreWork` is reliant on `doWork`. In functional programming, functions should behave like reusable artifacts that can be evaluated in any order and continue to yield correct results. 
 Not all side effects are this obvious. Some of them are embedded into language level functions. Frankly, you should be wary of functions that use parameter references `&`, such as:
 
