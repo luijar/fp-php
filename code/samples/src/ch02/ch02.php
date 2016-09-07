@@ -48,7 +48,7 @@
 	
 	//apply2($divide)(5, 0);
 
-	$safeDivide = function ($a, $b) {   
+	$safeDivide = function (float $a, float $b): float {   
 	   return empty($b) ? NAN : $a / $b;
 	};
 

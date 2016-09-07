@@ -1,1 +1,1 @@
-Hello FP!Hello FP with CurryHello FP! Hello FP! Hello FP!!
+Functional PHP &lt;i&gt;Rocks!&lt;/i&gt; Functional PHP &lt;i&gt;Rocks!&lt;/i&gt; Functional PHP &lt;i&gt;Rocks!&lt;/i&gt;

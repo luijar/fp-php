@@ -1,8 +1,8 @@
 #Higher-order PHP
-I mentioned in chapter 1 that functional programming is not a new framework, library, or design pattern. Rather, it's a way of thinking that offers an alternative to the way in which you design your code. However, paradigms by themselves are just abstract concepts that need the right host language to become a reality. And, yes! PHP is that language. In this chapter, I'll take a look at two important features of PHP: higher-order functions and closures. Both of these are instrumental in building all of the techniques you'll learn about in this book. The goal of this chapter is to teach you how to use functions in a very different way, the *functional* way.
+I mentioned in chapter 1 that functional programming is not a new framework, library, or design pattern. Rather, it's a way of thinking that offers an alternative to the way in which you design your code. However, paradigms by themselves are just abstract concepts that need the right host language to become a reality. And, yes! PHP is that language. In this chapter, we'll take a look at two important features of PHP that make functional possible: higher-order functions and closures. Both of these are instrumental in building all of the techniques you'll learn about in this book. The goal of this chapter is to teach you how to use functions in a very different way--the *functional* way.
 
 ##PHP's first-class, higher-order functions 
-A higher-order function is defined as one that can accept other functions as arguments or be returned from another function. This is in direct relationship with another term you might've heard before, that has *first-class functions*. Both are intimately related, as the ability of a language artifact to be passed in as an argument or returned from a functions hinges on it being considered an object. This also means, of course, that functions can be assigned to variables. Let's take a look at a few examples: 
+A higher-order function is defined as one that can accept other functions as arguments or return another function. This is in direct relationship with another term you might've heard before, that is *first-class functions*. Both are intimately related, as the ability of a language artifact to be passed in as an argument or returned from a functions hinges on it being considered just another object. This also means, of course, that functions can be assigned to variables. Let's take a look at a few examples: 
 
 Functions in PHP can be manipulated just like objects. In fact, if you were to check the type of a function, you'll find out that they are instances of the class [`Closure`](http://php.net/manual/en/class.closure.php):
 
@@ -10,15 +10,18 @@ Functions in PHP can be manipulated just like objects. In fact, if you were to c
 var_dump(function () { }); 
 
 //-> class Closure#1 (0) {
+
      }
 ~~~
 
-###Assign a function to a variable
-This means that you should be able to treat a function just like any other type of object. Which means they can be assigned to variables. Consider a simple string concatenation function:
+If functions behave like objects, it's logical to think we can assign them to variables.
+
+###Assigning to a variable
+This means that you should be able to treat a function just like any other type of object. Which means that they can be assigned to variables. Consider a simple string concatenation function:
  
 ~~~
-$concat2 = function ($s1, $s2) {
-   return $s1. ' '. $s2;
+$concat2 = function (string $s1, string $s2): string {
+	return $s1. ' '. $s2;
 };
 
 $concat2('Hello', 'World');  //-> 'Hello World'
@@ -31,11 +34,11 @@ is_callable($concat2) // 1
 ~~~ 
 
 ###Returned from a function
-Functions can also be returned from another function. This is an extremely useful technique for creating families of functions. It's also the main part of implementing function currying, which you'll learn about in later chapters. Consider a simple `concatWith` function:
+Functions can also be returned from other functions. This is an extremely useful technique for creating families of functions. It's also the main part of implementing argument currying, which you'll learn about in later chapters. Consider a simple `concatWith` function:
 
 ~~~
-function concatWith($a) {
-   return function ($b) use ($a) {
+function concatWith(string $a): callable {
+   return function (string $b) use ($a): string {
       return $a . $b;	
    };
 }
@@ -44,8 +47,8 @@ $helloWith = concatWith('Hello');
 $helloWith('World'); //-> 'Hello World'
 ~~~
 
-###As a function parameter
-Supplying functions as parameters allows you to administer specialized behavior on top of another function. Suppose I create a simple function that takes a *callable* (itself a function) and applies it onto its other parameters:
+###As a parameter
+Supplying functions as parameters allows you to administer specialized behavior on top of another function. Suppose I create a simple function that takes a *callable* and applies it over its other parameters:
 
 ~~~
 function apply(callable $operator, $a, $b) {
@@ -53,14 +56,14 @@ function apply(callable $operator, $a, $b) {
 }
 ~~~
 
-Through this *function argument*, I can inject any behavior I want:
+Through the callable, I can inject any behavior I want:
 
 ~~~
-$add = function ($a, $b) {
+$add = function (float $a, float $b): float {
    return $a + $b;
 };
 
-$divide = function ($a, $b) {
+$divide = function (float $a, float $b): float {
    return $a / $b;
 };
 
@@ -72,14 +75,14 @@ apply($divide, 5, 5); //-> 10
 Consider a version of apply that's a bit more useful and expressive: 
 
 ~~~
-function apply(callable $operator) {
+function apply(callable $operator): callable {
    return function($a, $b) use ($operator) {
       return $operator($a, $b);
    };
 }
 ~~~
 
-Don't mind at this point the `use` keyword, I'll explain this further in a bit. Notice this code makes it very explicit what it's purpose is, and how I can use it to derive other types of functions from it. Let's go over some simple examples:
+This function is very explicit in what it's purpose is, and how I can use it to derive other types of functions from it. Let's go over some simple examples:
 
 ~~~
 apply($add)(5, 5); //-> 10
@@ -100,21 +103,17 @@ I mentioned earlier that higher-order functions allow you to supply specialized 
 Warning: Division by zero in .../code/src/ch02/ch02.php ...
 ~~~
 
-To fix this, I'll create a function called `safeDivide` that  extra null-check logic. This function is a lot more resilient, returning PHP's NAN constant back to the caller.
+To fix this, I'll create a function called `safeDivide` that supplies extra null-check logic. This function is a lot more resilient, returning PHP's `NAN` constant back to the caller instead of an exception.
 
 ~~~
-/**
- * Divide two numbers 
- * @return int | NAN
- */
-function safeDivide($a, $b) {   
+function safeDivide(float $a, float $b): float {   
    return empty($b) ? NAN : $a / $b;
 }
 
 apply($safeDivide)(5, 0); //-> NAN
 ~~~
 
-The other reason why I prefer this approach is that checking for NAN requires a lot less effort and it's much cleaner than having to try and catch exceptions:
+The other reason why I prefer this approach is that checking for `NAN` requires a lot less effort and it's much cleaner than having to try and catch exceptions:
 
 ~~~
 try {
@@ -127,7 +126,7 @@ catch(Exception $e) {
 }
 ~~~
 
-This is a much better API design: 
+I think this is a much cleaner API design: 
 
 ~~~
 $result = apply($safeDivide)(5, 0);
@@ -140,7 +139,9 @@ else {
 }
 ~~~
 
-This approach avoids throwing the exception altogether. Throwing anEeceptions is not only a side effect, as it causes the program stack to unwind, but also doesn't respect the *Locality Principle* of code. In particular, it fails to obey *spatial locality*, which states that related statements that should be executed sequentially shall be placed near each other. This has more application on CPU architecture, but can also be applied to code design.  
+This approach avoids throwing an exception altogether. Recall from chapter 1 that throwing exceptions is not only a side effect, as it causes the program stack to unwind and logs written, but also doesn't respect the *Locality Principle* of code. In particular, it fails to obey *spatial locality*, which states that related statements that should be executed sequentially shall be placed near each other. This has more application on CPU architecture, but can also be applied to code design.  
+
+Before I leave this topic of passing functions as arguments, it's important to mention that you may pass any user-defined function varible as an argument, as well as most native to PHP, but not the ones that are part of the language such as: `echo`, `print`, `unset()`, `isset()`, `empty()`, `include`, `require`, `require_once`, and others. In these cases, your best bet is to wrap them using your own.
 
 To recap, higher-order functions are possible in PHP because, as of PHP 5.3, they are actually `Closure` instances behind the scenes. Before this version, this was just considered an internal design decision, but now you can reliably take advantage of it to approach problems very differently. In this book, you'll learn to master higher-order functions. 
 

@@ -30,7 +30,7 @@
 	println('Filter -> Map -> Reduce: '. $result);
 
 // Excerscise 1
-	$concat2 = function ($s1, $s2) {
+	$concat2 = function (string $s1, string $s2): string {
 		return $s1. ' '. $s2;
 	};
 
