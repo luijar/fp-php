@@ -76,7 +76,23 @@ for($i = 0; $i < count($array); $i++) {
 }
 
 $array; //-> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]~~~Imperative programming tells the computer, in great detail, how to perform a certain task (looping through and applying the square formula to each number, in this case). This is the most common way of writing this code and most likely will be your first approach to tackling this problem. 
-Declarative programming, on the other hand, *separates program description from evaluation*. It focuses on the use of expressions to describe what the logic of a program is or what output would look like without necessarily specifying its control flow or state changes. This is done with the use of higher-order functions that establish a certain vocabulary based on a few set of primitives like filter, map, reduce, zip, compose, curry, lift, etc. These are just some of the common terms used a lot with FP that you'll learn about in this book. Once you employ this vocabulary to concoct the instructions (subroutines, functions, procedures, etc) that make up your program, the PHP runtime translates this higher level of abstraction into regular PHP code: Shifting to a functional approach to tackle this same task, you only need to be concerned with applying the correct behavior at each element and cede control of looping to other parts of the system. I can let PHP's `array_map()` do the work:~~~
+Declarative programming, on the other hand, *separates program description from evaluation*. It focuses on the use of expressions to describe what the logic of a program is or what output would look like without necessarily specifying its control flow or state changes. Familiar examples of declarative code are seen in SQL statements:
+~~~SELECT * FROM Person
+WHERE age > 60
+ORDER BY age DESC; 
+~~~Also, Regular Expressions. The following code extracts the host name from a URL:
+~~~
+@^(?:http://)?([^/]+)@i~~~
+Also, CSS (and alt-CSS like LESS or SASS) files are also declarative:
+~~~
+body {
+    background: #f8f6f6;
+    color: #404040;
+    font-family: 'Lucida Grande', Verdana, sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 20px;
+}~~~In PHP, declarative code is achieved using  higher-order functions that establish a certain vocabulary based on a few set of primitives like filter, map, reduce, zip, compose, curry, lift, etc. These are just some of the common terms used a lot with FP that you'll learn about in this book. Once you employ this vocabulary to concoct the instructions (subroutines, functions, procedures, etc) that make up your program, the PHP runtime translates this higher level of abstraction into regular PHP code: Shifting to a functional approach to tackle this same task, you only need to be concerned with applying the correct behavior at each element and cede control of looping to other parts of the system. I can let PHP's `array_map()` do the work:~~~
 $square = function (int $num): int {
    return pow($num, 2);
 };
