@@ -27,7 +27,7 @@ $concat2 = function (string $s1, string $s2): string {
 $concat2('Hello', 'World');  //-> 'Hello World'
 ~~~
 
-Behind the scenes this code takes the anonymous function (RHS) and assigns it to the variable `$concat2` (LHS). Alternatively, you can check for the presence of a function varible using [`is_callable()`](http://php.net/manual/en/function.is-callable.php):
+Behind the scenes this code takes the anonymous function (RHS) and assigns it to the variable `$concat2` (LHS). Alternatively, you can check for the presence of a function variable using [`is_callable()`](http://php.net/manual/en/function.is-callable.php):
 
 ~~~
 is_callable($concat2) // 1
@@ -135,32 +135,22 @@ if(!is_nan($result)) {
    return $result;
 }
 else {
-   Log::warning('Math error ocurred! Division by zero!');
+   Log::warning('Math error occurred! Division by zero!');
 }
 ~~~
 
 This approach avoids throwing an exception altogether. Recall from chapter 1 that throwing exceptions is not only a side effect, as it causes the program stack to unwind and logs written, but also doesn't respect the *Locality Principle* of code. In particular, it fails to obey *spatial locality*, which states that related statements that should be executed sequentially shall be placed near each other. This has more application on CPU architecture, but can also be applied to code design.  
 
-Before I leave this topic of passing functions as arguments, it's important to mention that you may pass any user-defined function varible as an argument, as well as most native to PHP, but not the ones that are part of the language such as: `echo`, `print`, `unset()`, `isset()`, `empty()`, `include`, `require`, `require_once`, and others. In these cases, your best bet is to wrap them using your own.
+Before I leave this topic of passing functions as arguments, it's important to mention that you may pass any user-defined function variable as an argument, as well as most native to PHP, but not the ones that are part of the language such as: `echo`, `print`, `unset()`, `isset()`, `empty()`, `include`, `require`, `require_once`, and others. In these cases, your best bet is to wrap them using your own.
 
 To recap, higher-order functions are possible in PHP because, as of PHP 5.3, they are actually `Closure` instances behind the scenes. Before this version, this was just considered an internal design decision, but now you can reliably take advantage of it to approach problems very differently. In this book, you'll learn to master higher-order functions. 
 
 Furthermore, because functions are true instances, as of PHP 5.4 you can actually invoke methods on them which gives you more control of an anonymous function after it's been created (as you might expect, `Closure` instances all implement the magic method `__invoke()`, which is important for consistency reasons with other classes).
 
-Here's the protocol for the [Closure class](http://php.net/manual/en/class.closure.php). In chapter 4, I'll spend some more time going over the details of this class:
-
-~~~
-class Closure {
-   private __construct ( void )
-   public static Closure bind ( Closure $closure , object $newthis [, mixed $newscope = "static" ] )
-   public Closure bindTo ( object $newthis [, mixed $newscope = "static" ] )
-   public mixed call ( object $newthis [, mixed $... ] )
-}
-~~~
 ###Heck, even plain objects are invokable
-Aside from having true first-class, higher-order functions, PHP takes it to the next level with invocable objects. Now, this isn't really a functional concept whatsoever, but used correctly it could be a pretty cool technique.  In fact, PHP's anonymous function syntax under the hood gets compiled to a class with an `__invoke()` method on it. 
+Aside from having true first-class, higher-order functions, PHP takes it to the next level with invocable objects. Now, this isn't really a functional concept whatsoever, but used correctly it could be a pretty powerful technique.  In fact, PHP's anonymous function syntax under the hood gets compiled to a class with an `__invoke()` method on it. 
 
-Now, the reason why this isn't really a functional technique per se, is that functional programming tends to impose a clear separation of behavior and state. I'll talk more about this in later chapters, but in essence that goal is to decouple the functiosn away from their owning objects. One reason for doing this is that the use of the `$this` keyword is a gateway for side effects. Consider this simple `Counter` class: 
+Now, the reason why this isn't really a functional technique per se, is that functional programming tends to impose a clear separation of behavior and state. To put it another way, doing away with the use of `this`. One reason for doing this is that `$this` keyword is a gateway for side effects. Consider this simple `Counter` class: 
 
 ~~~
 class Counter {
@@ -170,7 +160,7 @@ class Counter {
       $this->_value = $init;
    }
 
-   public function increment() {
+   public function increment(): int {
       return $this->_value++;
    }
 }
@@ -181,7 +171,7 @@ $c->increment(); //-> 2
 $c->increment(); //-> 3
 ~~~ 
 
-The `increment()` function is theoretically considered not pure (or impure) because it's reaching for data in its outer scope (the instance scope). Fortunately, this class encapsulates this state pretty well and doesn't expose any mutation methods (i.e. a setter). So, from a practical standpoint, this setter is predictable and constant. We can go ahead and make this object invocable by adding the magic `__invoke()` method:
+The `increment` function is theoretically considered not pure (or impure) because it's reaching for data in its outer scope (the instance scope). Fortunately, this class encapsulates this state pretty well and doesn't expose any mutation methods as in the form of a setter. So, from a practical standpoint, this object is predictable and constant. We can go ahead and make this object invocable by adding the magic `__invoke()` method to it:
 
 ~~~
 public function __invoke() {
@@ -194,12 +184,12 @@ increment(); //-> 102
 increment(); //-> 103
 ~~~
 
-In practical functional programming, there are many design patterns that revolve around wrapping values into objects and using functions to manipulate them, more on this later. But for the most part, we'll prefer to separate the behavior and the state. One way of doing this to keep things semantically meaningful is to prefer static functions that declare arguments for any data they need to carry out their job:
+In practical functional programming, there are many design patterns that revolve around wrapping values into objects and using functions to manipulate them. But for the most part, we'll prefer to separate the behavior from the state. One way of doing this to keep things semantically meaningful is to prefer static functions that declare arguments for any data they need to carry out their job:
 
 ~~~
 class Counter {
    ...
-   public static function increment($val) {
+   public static function increment(int $val): int {
       return $val + 1;
    }
 }
@@ -208,10 +198,9 @@ Counter::increment(100); //-> 101
 ~~~
 
 ##Using containers improve your APIs
-Earlier you learned that returning NAN in the event that `divide` was called with a zero denominator led to a better API design because it freed your users from having to wrap their code in try/catch blocks. This is always a good thing  because exceptions should be thrown only when there's no recovery path. However, we can do better. Working with numbers and NAN doesn't really get you anywhere; for example, adding anything to NAN (ex. `1 + NAN`) returns NAN, and rightfully so. So, instead of burdening your users to place `is_nan` checks everywhere, why not consolidate this logic in one place. 
+Earlier you learned that returning `NAN` in the event that `divide` was called with a zero denominator led to a better API design because it freed your users from having to wrap their code in try/catch blocks. This is always a good thing  because exceptions should be thrown only when there's no recovery path. However, we can do better. Working with numbers and `NAN` doesn't really get you anywhere; for example, adding anything to `NAN` (ex. `1 + NAN`) returns `NAN`, and rightfully so. So, instead of burdening your users to place `is_nan` checks after each function call, why not consolidate this logic in one place? We can use containers to do this. 
 
-Containers: 
-Developing function pipelines is not the only way to gain fluency in a declarative way. I can also use a *Fluent Object* design pattern. The reasons for doing this might not seem obvious at first, but bear with me as I introduce this pattern. Aside from side effect free functions, in FP variables must be immutable (which sounds odd, I know). Because PHP doesn't give us this out of the box, we have to use patterns to fill in the gap. One pattern we can use is wrapping containers around a value to controls its state. Consider a simple `Container` class
+We cans use wrappers to control access to certain variables and provide additional behavior. Looking at it from an OOP design patterns point of view, you can compare this to a Fluent Object pattern. To start with, consider this simple `Container` class:
 ~~~
 class Container {
    private $_value;
@@ -231,7 +220,7 @@ class Container {
    }
    
    // Print out the container
-   public function __toString() {
+   public function __toString(): string {
       return "Container[ {$this->_value} ]";  
    }
    
@@ -239,47 +228,54 @@ class Container {
    public function __invoke() {
       return $this->_value;
    }
-}~~~Containers wrap data and provide a mechanism to transform it immutably by enabling a mapping function. This is in many ways analogous to `array_map()`. For instance, I can apply a series of transformations on a string like this  ~~~$c = Container::of('</ Hello FP >')->map(htmlspecialchars)->map(strtolower);
-//-> Container[ &lt;/ hello fp &gt; ]
-~~~Notice how this looks much cleaner and easier to parse against nesting these function calls one insider other. Personally, I rather see code in a flattened out and linear model. Otherwise, it would look like this
+}~~~Containers wrap data and provide a mechanism to transform it in a controlled manner via a mapping function. This is in many ways analogous to the way you can map functions over an array using `array_map()`:
+
+~~~array_map('htmlspecialchars', ['</ HELLO >']); //-> [&lt;/ HELLO &gt;]
+~~~This container behaves exactly the same: 
 ~~~
-strtolower(htmlspecialchars('</ Hello FP >')); //-> &lt;/ hello fp &gt;~~~I also added some PHP magic with `__invoke()` that can be used to dereference the container upon invocation
+function container_map(callable $f, Container $c): Container {
+	return $c->map($f);
+}~~~I can call it with `container_map`, or I can use it directly. For instance, I can apply a series of transformations on a string fluently like this:  ~~~$c = Container::of('</ Hello FP >')->map('htmlspecialchars')->map('strtolower');
+$c; //-> Container[ &lt;/ hello fp &gt; ]
+~~~Notice how this looks much cleaner and easier to parse against nesting these function calls one inside the other. Personally, I rather see code in a flattened out and linear model than something like:
+~~~
+strtolower(htmlspecialchars('</ Hello FP >')); //-> &lt;/ hello fp &gt;~~~I also added some PHP magic with `__invoke()` that can be used to dereference the container upon invocation as such:
 ~~~$c = Container::of('Hello FP')->map($repeat(2))->map(strlen);
 $c(); //-> 16
-~~~So, what's the use for this pattern? Earlier I mentioned that throwing exceptions, or for that matter, the imperative try/catch mechanism has side effects. Arguably, try/catch is also not very declarative and belongs in the same category as for loops and conditional statements. Containerizing values is an important design pattern in FP because it allows you to consolidate the logic of applying a function chain (sequence) of changes to some value immutably and side effect free. Later on, we'll see how this leads into the topic of *Monads*. 
-This can be used to implement error handling. Consider this scenario
+~~~So, what's the use for this pattern? Earlier I mentioned that throwing exceptions, or for that matter, the imperative `try`/`catch` mechanism has side effects. Let's circle back to that for a moment. Arguably, `try`/`catch` is also not very declarative and belongs in the same category as for loops and conditional statements. Containerizing values is an important design pattern in FP because it allows you to consolidate the logic of applying a function chain (sequence) of transformations to some value immutably and side effect free; it's immutable because it's always returning new instances of the container. 
+This can be used to implement error handling. Consider this scenario:
 ~~~$c = Container::of([1,2,3])->map(array_reverse);
 print_r($c()) //-> [3, 2, 1]~~~
 
 But if instead of a valid array, a `null` value was passed in, you will see: 
 
 ~~~
-Warning: array_reverse() expects parameter 1 to be array, null given~~~One way to get around this is to make sure all functions you use (from PHP or custom) do some level of null-checking. But instead of repeating null-checks everywhere, wouldn't it be better to consolidate it all in once place? Consider the implementation for a `SafeContainer`
+Warning: array_reverse() expects parameter 1 to be array, null given~~~One way to get around this is to make sure all functions you use (PHP or your own) are "safe," or do some level of null-checking. Consider the implementation for a `SafeContainer`:
 ~~~
 class SafeContainer extends Container {		
    // Performs null checks
-   public function map(callable $f) {
+   public function map(callable $f): SafeContainer {
       if(!empty($this->_value)) {
          return static::of(call_user_func($f, $this->_value));
       }
-      return static::of(null); 			
+      return static::of(); 			
    }	
-}	~~~Now I don't have to worry about the error checking to permeate all of my business logic; it's all consolidated in one place
+}	~~~With this I don't have to worry about the error checking to clutter all of my business logic; it's all consolidated in one place. Let's see it in action:
 ~~~
 $c = SafeContainer::of(null)->map(array_reverse);
-print_r($c()); //-> Nothing~~~The best part about this is that your function chains look exactly the same, there's nothing extra on your part, so you can continue to map as many functions as you need and any errors will be propagated through the entire chain behind the scenes. 
+print_r($c()); //-> Container[null]~~~The best part about this is that your function chains look exactly the same, there's nothing extra on your part, so you can continue to map as many functions as you need and any errors will be propagated through the entire chain behind the scenes. 
 
-In this section, I want to bring back the concept of containers from chapter 1 and mix it with using higher-order functions. Recall that I can use containers to wrap any value and transform it in an immutable way (i.e. as the value inside the container changes, new containers are created keeping the original intact). Here's an example:
+Now let's mix it up and use containers with higher-order functions. Here's an example:
 
 ~~~$c = Container::of('</ Hello FP >')->map(htmlspecialchars)->map(strtolower);
 //-> Container[ &lt;/ hello fp &gt; ]
 ~~~
 
-Since PHP is an OO language after all, I'll create a new container class that just extends `Container` and overrides the `map` function. For the sake of this example, I'll call this `SafeNumber`:
+Just for completeness sake, here's a container called `SafeNumber` to tackle our division-by-zero problem earlier:
 
 ~~~
 class SafeNumber extends Container {
-   public function map(callable $f) {		
+   public function map(callable $f): SafeNumber {
       if(!isset($this->_value) || is_nan($this->_value)) {
          return static::of(); // empty container		}
         else {
@@ -289,14 +285,10 @@ class SafeNumber extends Container {
 }
 ~~~
 
-It looks very simple, but the effect of this wrapper type is incredible; most things in fucntional programming are very basic but with tremendous reach. I'll refactor `safeDivide` earlier to return a `SafeNumber`:
+It looks very simple, but the effect of this wrapper type is incredible; most things in functional programming are very basic but with tremendous impact and reach. I'll refactor `safeDivide` earlier to return a `SafeNumber`:
 
 ~~~~
-/**
- * Divide two numbers
- * @return SafeNumber
- */
-function safeDivide($a, $b) {   
+function safeDivide($a, $b): SafeNumber {   
    return SafeNumber::of(empty($b) ? NAN : $a / $b);
 }
 ~~~~
@@ -304,11 +296,11 @@ function safeDivide($a, $b) {
 One thing I like about this function is how honest it is about its return type. It's essentially notifying the caller that something might go wrong, and that it's safe to protect the result. Also, it removes the burden of having to NAN-check any functions that are invoked with this value. I'll show the cases of calling `safeDivide` with a valid as well as an invalid denominator:
 
 ~~~
-	function square($a) {
+	function square(int $a): int {
 		return $a * $a;
 	}
 
-	function increment($a) {
+	function increment(int $a): int {
 		return $a + 1;
 	}
 
@@ -316,41 +308,118 @@ One thing I like about this function is how honest it is about its return type. 
 	apply(safeDivide2)(5, 1)->map(square)->map(increment); //-> Container [26]
 
     // error case
-	apply(safeDivide2)(5, 0)->map(square)->map(increment)); //-> Container[  ]
+	apply(safeDivide2)(5, 0)->map(square)->map(increment)); //-> Container[ null ]
 ~~~
 
-`SafeNumber` abstracts out the details of dealing with an invalid number, so that our application functions stay focused on carrying out their work instead of having to deal with this. I'll revisit this concept again in later chatpters in the context of error handling when I discuss *Monads*. 
+`SafeNumber` abstracts out the details of dealing with an invalid number, so that we're left alone to worry about bigger, more important problems. 
+
+In chapter 1, I briefly mentioned that behind the scenes, all functions are instances of the `Closure` class. This is what enables me to map them to containers. This is important to understand, so let's take another look at this class.  
 
 ##Closures
-TBD
+After PHP 5.4+, all functions in PHP are objects created from the `Closure` class. But why do we call it this way and not the more intuitive `Function` type (like JavaScript)? The goal behind this class is to represent [anonymous functions](http://php.net/manual/en/functions.anonymous.php) where a closure is formed around the function as it's being inlined into, say, a callable argument. For instance, I could use an anonymous function to perform the safe divide (I would recommend you do this only when the function is unique to the problem you're solving and you don't anticipate reusing it somewhere else): 
 
-A closure gets compiled to a class with a `__invoke()` but its constructor is what takes the data in `use`.
+~~~
+apply2(
+    function (float $a, float $b): SafeNumber {   
+	   return SafeNumber::of(empty($b) ? NAN : $a / $b);
+	})
+	(7, 2); //-> Container [3.5]
+~~~
 
+They are also used extensively in modern MVC frameworks, like Laravel:
 
-##Become a SOLID functional developer
-TBD
-###Singularity
-TBD
+~~~
+Route::get('/item/{id}', function ($id) {
+  return Item::findById($id);
+});
+~~~
 
-###Liskov Substitution Principle
-TBD
+But this doesn't apply exclusively to the anonymous case, all functions create a closure. Unfortunately, at this point PHP doesn't have support for "lambda expressions," syntactically simpler anonymous functions, but there's currently an open proposal that I hope will be included soon. Check out this RFC [here](https://wiki.php.net/rfc/arrow_functions) for more information.  
 
+With lambda expressions and omitting type declarations, the code above would look pretty slick:
 
-##What about our objects?
+~~~
+apply2(function ($a, $b) => SafeNumber::of(empty($b) ? NAN : $a / $b))(7, 2);
+~~~ 
 
-Treat as values
-freeze PHP object
-Lenses
+Similarly, lambda functions would also be implemented to form a closure around it. Let's understand what this means. A closure is defined as the lexical scope created around a function declaration, anonymous or otherwise. This gives function knowledge of the state of the variables lexically declared around it. The term lexical refers to the actual placement of the variable in the code. Here's a diagram that explains what a function inherits: 
 
-##Functional vs Object-Oriented Summary
+{float=center}
+![](images/closure.png)
+
+The data structure used to encapsulate the state that makes up a function's closure is the `[Closure class]`(http://php.net/manual/en/class.closure.php) class, hence the name. Here's the definition for it:
+
+~~~
+class Closure {
+   private __construct ( void )
+   public static Closure bind ( Closure $closure , object $newthis [, mixed $newscope = "static" ] )
+   public Closure bindTo ( object $newthis [, mixed $newscope = "static" ] )
+   public mixed call ( object $newthis [, mixed $... ] )
+}
+~~~
+
+Recall the function `concatWith` used earlier, and look closely at the inner function:  
+
+~~~
+function concatWith(string $a): callable {
+   return function (string $b) use ($a): string {
+      return $a . $b;	
+   };
+}
+~~~
+
+PHP's closure mechanism has an advantage over that of JavaScript's in that, instead of simply capturing all of the state around an anonymous function declaration, you can explicitly declare which variables the it's permitted to access via the `use` keyword. 
+
+######Hint:`use` does not work for functions in the outer scope.
+
+This is incredibly powerful and allows you to have more  control over side effects. Under the hood, the variables passed into `use` are used to instantiate its closure. 
+
+Here are some examples that reveal PHP's internal closure object. The `add` function can be invoked as globally using [`Closure::call`](http://php.net/manual/en/closure.call.php):
+
+~~~
+$add->call(new class {}, 2, 3); //-> 5
+~~~
+
+The use of PHP 7's anonymous class here is to set the owning class of this function (in case `$this` is used) to something concrete. Since I don't use `$this`, I can provide a meaningless object to receive `$this`. 
+
+You can also dynamically bind functions to object scopes using [`Closure::bindTo`](http://php.net/manual/en/closure.bindto.php). This allows you to easily mixin additional behavior of an existing object. As example, let's create a function that allows us to validate the contents inside a container before mapping an operation to it. In functional programming, conditional validation is applied using an operator called `filter`, just like [`array_filter`](http://php.net/manual/en/function.array-filter.php) is used to remove unnecessary elements.  But instead of adding `filter` to all containers, I can mixin a properly scoped closure (in some ways this is similar to using [`Traits`](http://php.net/manual/en/language.oop5.traits.php)):
+
+~~~
+function addTo($a) {
+	return function ($b) use ($a) {
+		return $a + $b;	
+	};
+}
+
+$filter = function (callable $f): Container {
+	return Container::of(call_user_func($f, $this->_value) ? $this->_value : 0);
+};
+
+$wrappedInput = Container::of(2);	
+
+$validatableContainer = $filter->bindTo($wrappedInput, Container);
+
+$validatableContainer('is_numeric')->map(addTo(40)); //-> 42
+~~~
+
+Now consider what happens when the input is invalid according to our filter predicate:
+
+~~~
+$wrappedInput = Container::of('abc);	
+$validatableContainer('is_numeric')->map(addTo(40)); //-> 40
+~~~
+
+Now that you've learned about higher-order functions (and then some more), we're ready to begin creating functional programs. In chapter 3 we'll learn about function composition and point-free programs, as well as how to break problems apart into manageable, testable units. 
+
+Lastly, if you have an OOP background, here's a nice table to keep handy that compares both paradigms which will make the rest of the material easier to digest.
+
+##Functional vs Object-Oriented Summary Table
 
 | Traits        | Functional           | Object-oriented  |
 |:------------- |:-------------|:-----|
 | Unit of composition      | Functions | Objects (classes) |
 | Programming style     | Declarative      |   Mostly imperative |
 | Data and Behavior | Loosely coupled into pure, standalone functions      |    Tightly coupled in classes with methods| 
-|State Management | Treats objects as immutable values | Favors mutation of objects via instance methods |
-|Control flow|Functions and recursion| Loops and conditionals|
+|State Management | Treats objects as immutable values (minimize state changes) | Favors mutation of objects (state) via methods |
+|Control flow|Higher-order functions and recursion| Loops and conditionals|
 |Tread-safety | Enables concurrent programming | Difficult to achieve |
-
-

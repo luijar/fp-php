@@ -94,8 +94,7 @@
 	
 	$result = array_reduce(array_map($square, $array), 'add');
 	println('Map->Reduce: '. $result);	
-	
-	die();
+		
 // ------------------------------------------------//
 
 // Excersise 2

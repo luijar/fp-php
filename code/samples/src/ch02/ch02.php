@@ -37,7 +37,7 @@
 	
 
 	function apply2(callable $operator) {
-		return function($a, $b) use ($operator) {
+		return function ($a, $b) use ($operator) {
 			return $operator($a, $b);
 		};
 	}
@@ -54,7 +54,7 @@
 
 	println(
 
-		apply($divide)(5, 0)
+		apply($divide, 5, 0)
 
 		);
 
@@ -74,19 +74,62 @@
 		}
 	}
 
-	function safeDivide2($a, $b) {   
+	function safeDivide2($a, $b): SafeNumber {   
 	   return SafeNumber::of(empty($b) ? NAN : $a / $b);
 	}
 
-	function square($a) {
+	function divideBy(float $a): callable {
+		return function (float $b) use ($a): float {
+			return $a / $b;
+		};
+	}
+
+	function square(int $a): int {
 		return $a * $a;
 	};
 
-	function increment($a) {
+	function increment(int $a): int {
 		return $a + 1;
 	};
 
 	println(apply2(@safeDivide2)(5, 1)->map(@square)->map(@increment));
 
 	println(apply2(@safeDivide2)(5, 0)->map(@square)->map(@increment));
+
+	println(apply2(function ($a, $b): SafeNumber {   
+	   return SafeNumber::of(empty($b) ? NAN : $a / $b);
+	})
+	(7, 2));
+	
+	println('As closure: '. $add->call(new class {}, 2, 3));
+
+	// Mixin
+	$filter = function (callable $f): Container {
+		return Container::of(call_user_func($f, $this->_value) ? $this->_value : 0);
+	};
+
+	$wrappedInput = Container::of('abc');	
+
+	$validatableContainer = $filter->bindTo($wrappedInput, 'Container');
+
+	println($validatableContainer('is_numeric')->map(adderOf(25)));
+	
+	// Closure
+	$global = 'Global';
+	$msg = 'Hello';
+
+	function outer($param) {
+	  global $global;
+      println('Global in outer: '.$global . 'a ');
+      return function () use ($param) {
+      	  global $global;	
+          println('Param 1: '. $param);
+          println('Global: '. $global);  
+          // sees global variables through the 'global' keyword        
+      };
+	}
+
+	$inner = outer('Arg');
+	$inner();
+
 
