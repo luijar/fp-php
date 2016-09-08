@@ -1,3 +1,0 @@
-#Object-oriented in the large, functional in the small
-
-Under Construction

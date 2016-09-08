@@ -1,5 +1,3 @@
-#React: The Promise Monad
+#Functional Domain Modeling
 
 Under Construction
-
-
