@@ -1,14 +1,4 @@
-#Functional Reactive Programming
+#Reactive Programming in PHP
 
-What is reactive programming? 
-
-
-
-
-Queryable interface
-
-
-Coordinating complex business flows
-
-
+Under Construction
 
