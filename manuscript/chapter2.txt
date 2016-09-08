@@ -135,7 +135,7 @@ if(!is_nan($result)) {
    return $result;
 }
 else {
-   Log::warning('Math error occurred! Division by zero!');
+   Log::warning('Math class occurred! Division by zero!');
 }
 ~~~
 
@@ -370,7 +370,7 @@ function concatWith(string $a): callable {
 
 PHP's closure mechanism has an advantage over that of JavaScript's in that, instead of simply capturing all of the state around an anonymous function declaration, you can explicitly declare which variables the it's permitted to access via the `use` keyword. 
 
-####Hint:`use` does not work for functions in the outer scope.
+T> Hint:`use` does not work for functions in the outer scope.
 
 
 This is incredibly powerful and allows you to have more  control over side effects. Under the hood, the variables passed into `use` are used to instantiate its closure. 
@@ -419,8 +419,13 @@ Lastly, if you have an OOP background, here's a nice table to keep handy that co
 | Traits        | Functional           | Object-oriented  |
 |:------------- |:-------------|:-----|
 | Unit of composition      | Functions | Objects (classes) |
+| ------------- | ------------- | ----- | 
 | Programming style     | Declarative      |   Mostly imperative |
+| ------------- | ------------- | ----- |
 | Data and Behavior | Loosely coupled into pure, standalone functions      |    Tightly coupled in classes with methods| 
+| ------------- | ------------- | ----- |
 |State Management | Treats objects as immutable values (minimize state changes) | Favors mutation of objects (state) via methods |
+| ------------- | ------------- | ----- |
 |Control flow|Higher-order functions and recursion| Loops and conditionals|
+| ------------- | ------------- | ----- |
 |Tread-safety | Enables concurrent programming | Difficult to achieve |

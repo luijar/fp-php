@@ -80,7 +80,7 @@ $array; //-> [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]~~~Imperative programming te
 ~~~SELECT * FROM Person
 WHERE age > 60
 ORDER BY age DESC; 
-~~~Also, Regular Expressions. The following code extracts the host name from a URL:
+~~~Also, Regular Expressions. The following expression extracts the host name from a URL:
 ~~~
 @^(?:http://)?([^/]+)@i~~~
 Also, CSS (and alt-CSS like LESS or SASS) files are also declarative:
@@ -210,6 +210,6 @@ At the core, functional programming is effectively the interplay between decompo
 
 {float=center}
 ![](images/decompose.png)Modularization in functional programming is closely related to the *Singularity* principle (one of the SOLID design principles), which states that functions should have a single purpose. The idea is that you learn to decompose programs into the simplest reusable units of composition. In FP, your functions should abide by this motto: 
-#####Loosely coupled + highly cohesive = No side effects + single purpose
+> Loosely coupled + highly cohesive = No side effects + single purpose
 Purity and referential transparency will encourage you to think this way because in order to glue simple functions together they must agree on their types of inputs and outputs as well as arity or number of arguments. You can see how using PHP 7's strict typing helps in this regard, because it helps you paint the flow of your program's execution as it hops from one function to the next. In short, they must agree on their exposed contracts, which is very similar to the *Coding to Interfaces* OO design principle. From referential transparency, we learn that a function’s complexity is sometimes directly related to the number of arguments it receives. A practical observation and not a formal concept indicates that the lower the number of function parameters, the simpler the function tends to be. {float=center}![](images/compose.png)This process is essentially what `compose` does. Also called a function combinator (for obvious reasons), `compose` can glue together functions in a loosely decoupled way by binding one function's output to the next one's input. This is essentially the same *coding to interfaces* but at a much lower level of granularity.##To sum up, what is functional programming?With all of this so far, we can pack the fundamental FP principles into the following statement:
-#####"***Functional programming refers to the declarative evaluation of pure functions to create immutable programs by avoiding externally observable side effects.***"Hope you've enjoyed this brief introduction of some of the topics covered in this book. In the next chapters we'll learn what enables PHP to be used functionally. In particular, you'll learn about higher-order, first-class functions, and closures, and some practical examples of using each technique. This will set the stage for developing data flows in chapter 3. So stay tuned!
+>"Functional programming refers to the declarative evaluation of pure functions to create immutable programs by avoiding externally observable side effects."Hope you've enjoyed this brief introduction of some of the topics covered in this book. In the next chapters we'll learn what enables PHP to be used functionally. In particular, you'll learn about higher-order, first-class functions, and closures, and some practical examples of using each technique. This will set the stage for developing data flows in chapter 3. So stay tuned!
