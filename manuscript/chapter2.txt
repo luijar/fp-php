@@ -370,7 +370,8 @@ function concatWith(string $a): callable {
 
 PHP's closure mechanism has an advantage over that of JavaScript's in that, instead of simply capturing all of the state around an anonymous function declaration, you can explicitly declare which variables the it's permitted to access via the `use` keyword. 
 
-######Hint:`use` does not work for functions in the outer scope.
+####Hint:`use` does not work for functions in the outer scope.
+
 
 This is incredibly powerful and allows you to have more  control over side effects. Under the hood, the variables passed into `use` are used to instantiate its closure. 
 
