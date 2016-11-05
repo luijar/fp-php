@@ -47,5 +47,5 @@ if($users->isEmpty()) {
     ]);
 }
 
-
-print_r($users);
+header('Content-type: application/json');
+echo json_encode($users);

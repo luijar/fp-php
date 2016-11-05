@@ -31,4 +31,6 @@ if($accounts->isEmpty()) {
     ]);
 }
 
-print_r($accounts);
+
+header('Content-type: application/json');
+echo json_encode($accounts);
