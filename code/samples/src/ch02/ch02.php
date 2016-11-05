@@ -118,14 +118,13 @@
 	$global = 'Global';
 	$msg = 'Hello';
 
-	function outer($param) {
+	function outer($args) {
 	  global $global;
-      println('Global in outer: '.$global . 'a ');
-      return function () use ($param) {
-      	  global $global;	
-          println('Param 1: '. $param);
-          println('Global: '. $global);  
-          // sees global variables through the 'global' keyword        
+      
+      // function arguments + global data via the 'global'
+
+      return function () use ($args) {
+      	  // function arguments + outer functions closure via 'use' + global data via 'global'          
       };
 	}
 
