@@ -1,7 +1,10 @@
 <?php
-require __DIR__ . '/../../vendor/autoload.php';
-
-require_once 'bootstrap.php';
+/**
+ * Write seed user data to database and expose service endpoint
+ * @author luijar
+ */
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__. '/../bootstrap.php';
 
 use Illuminate\Database\Capsule\Manager as DB;
 use Carbon\Carbon;
