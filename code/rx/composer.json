@@ -9,7 +9,8 @@
 		"cypresslab/php-curry":"*",
 		"reactivex/rxphp": "*",
 		"react/promise": "*",
-		"illuminate/database": "^5.3"
+		"illuminate/database": "^5.3",
+		"rx/http": "^0.2.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "5.0.8",
