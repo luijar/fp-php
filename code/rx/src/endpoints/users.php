@@ -46,6 +46,6 @@ if($users->isEmpty()) {
       'updated_at' => Carbon::now()
     ]);
 }
-header("HTTP/1.1 200 OK");
+
 header('Content-type: application/json');
 echo json_encode($users);
