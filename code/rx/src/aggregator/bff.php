@@ -1,7 +1,14 @@
 #!/usr/local/bin/php7
 <?php
+/**
+ *  Building an aggregator of multiple endpoints using RxPHP
+ *  @author luijar
+ */
+setlocale(LC_MONETARY, 'en_US');
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__. '/../bootstrap.php';
+require_once 'helpers.php';
 
 use Rx\{
   Observable as Observable,
@@ -10,38 +17,9 @@ use Rx\{
   Disposable\CallbackDisposable as Subscription
 };
 
-function isValidNumber($val) {
-  return !empty($val) && is_numeric($val);
-}
+const DEBUG = 'on';
+const LEVEL = 'DEBUG';
 
-function curl(string $url) {
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_URL, $url);
-  $result = curl_exec($ch);
-  curl_close($ch);
-  return $result;
-}
-
-function adder($a, $b) {
-  return $a + $b;
-}
-
-// finish
-function fetchEndPointStream(string $endpoint): Observable {
-  return Observable::just($endpoint)
-    ->flatMap(function ($url) {
-         return Promise::toObservable(Promise::resolved(curl($url)));
-    })
-    ->map('json_decode')
-    ->flatMap(function ($data) {
-      return is_array($data) ? Observable::fromArray($data)
-        : Observable::just($data);
-    });
-}
-
-// use curried tracer that you can turn on and off
 function findTotalBalance(int $userId): Subscription {
   return Observable::just($userId)
      ->map('isValidNumber')
@@ -56,16 +34,15 @@ function findTotalBalance(int $userId): Subscription {
      })
      ->map(P::prop('id'))
      ->doOnNext(function ($userId) {
-        echo "[DEBUG] Found user with ID: $userId \n";
+        trace("Found user with ID: $userId");
      })
-     ->mapTo(0)
-     //TODO: Figure out how to exclude the first event out of the main result
+     ->skip(1) // throw away the user ID
      # Second end point reached
      # Fetch stocks add up all of the user's stock prices
      ->merge(fetchEndPointStream("http://localhost:8002/stocks?id=$userId")
             ->map(function ($stock) {
                  list($symbol, $shares) = [$stock->symbol, $stock->shares];
-                 echo "[DEBUG] Found stock symbol: $symbol \n";
+                 trace("Found stock symbol: $symbol");
                  return [$symbol, $shares];
             })
             ->flatMap(function ($stockData) {
@@ -83,16 +60,40 @@ function findTotalBalance(int $userId): Subscription {
     # Fetch accounts add up all of the user's accounts
     ->merge(fetchEndPointStream("http://localhost:8003/accounts?id=$userId")
               ->doOnNext(function ($account) {
-                 echo "[DEBUG] Found account of type: $account->account_type \n";
+                 trace("Found account of type: $account->account_type");
               })
              ->map(P::prop('balance'))
       )
     ->reduce('adder', 0)
     ->subscribeCallback(
        function ($total) {
-         echo "Computed user's total balance to: $total\n";  // format in dollars
+         echo "Computed user's total balance to: ". money_format('%i', $total). "\n";
        }
    );
+}
+
+/**
+ * Tracer function to print DEBUG messages
+ */
+function trace(string $message) {
+    consoleLog(DEBUG, LEVEL)($message);
+}
+
+
+/**
+ * Stream that fetches the contents of  particular URL endpoint and
+ * wraps it in an array
+ */
+function fetchEndPointStream(string $endpoint): Observable {
+  return Observable::just($endpoint)
+    ->flatMap(function ($url) {
+         return Promise::toObservable(Promise::resolved(curl($url)));
+    })
+    ->map('json_decode')
+    ->flatMap(function ($data) {
+      return is_array($data) ? Observable::fromArray($data)
+        : Observable::just($data);
+    });
 }
 
 findTotalBalance(2);
