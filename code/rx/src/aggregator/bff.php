@@ -24,30 +24,73 @@ function curl(string $url) {
   return $result;
 }
 
+function adder($a, $b) {
+  return $a + $b;
+}
+
+// finish
+function fetchEndPointStream(string $endpoint): Observable {
+  return Observable::just($endpoint)
+    ->flatMap(function ($url) {
+         return Promise::toObservable(Promise::resolved(curl($url)));
+    })
+    ->map('json_decode')
+    ->flatMap(function ($data) {
+      return is_array($data) ? Observable::fromArray($data)
+        : Observable::just($data);
+    });
+}
+
 // use curried tracer that you can turn on and off
 function findTotalBalance(int $userId): Subscription {
   return Observable::just($userId)
-     ->filter('isValidNumber')
-     ->flatMap(function () {
-          return Promise::toObservable(Promise::resolved(curl('http://localhost:8001/users')));
+     ->map('isValidNumber')
+
+     # First end point reached
+     # Valid name provided, fetch all users
+     ->flatMapLatest(function () {
+        return fetchEndPointStream("http://localhost:8001/users");
      })
-     ->map('json_decode')
-     ->flatMap(function (array $users) {
-       return Observable::fromArray($users);
+     ->filter(function ($user) use ($userId) {
+        return $user->id === $userId;
      })
-    //  ->flatMap(function ($json) {
-    //    $js = json_decode($json);
-     //
-    //    return Observable::fromArray($js);
-    //  })
-    //  ->map(function ($response) {
-    //    echo gettype($response);
-    //    return $response;
-    //  })
+     ->map(P::prop('id'))
+     ->doOnNext(function ($userId) {
+        echo "[DEBUG] Found user with ID: $userId \n";
+     })
+     ->mapTo(0)
+     //TODO: Figure out how to exclude the first event out of the main result
+     # Second end point reached
+     # Fetch stocks add up all of the user's stock prices
+     ->merge(fetchEndPointStream("http://localhost:8002/stocks?id=$userId")
+            ->map(function ($stock) {
+                 list($symbol, $shares) = [$stock->symbol, $stock->shares];
+                 echo "[DEBUG] Found stock symbol: $symbol \n";
+                 return [$symbol, $shares];
+            })
+            ->flatMap(function ($stockData) {
+                  list($symbol, $shares) = $stockData;
+                  return Promise::toObservable(Promise::resolved(
+                      curl("http://download.finance.yahoo.com/d/quotes.csv?s=$symbol&f=sa&e=.csv")))
+                    ->map('str_getcsv')
+                    ->map(function ($result) use ($shares) {
+                        list($symbol, $price) = $result;
+                        return $price * $shares;
+                    });
+            })
+      )
+    # Thirdf end point reached
+    # Fetch accounts add up all of the user's accounts
+    ->merge(fetchEndPointStream("http://localhost:8003/accounts?id=$userId")
+              ->doOnNext(function ($account) {
+                 echo "[DEBUG] Found account of type: $account->account_type \n";
+              })
+             ->map(P::prop('balance'))
+      )
+    ->reduce('adder', 0)
     ->subscribeCallback(
-       function ($value) {
-         echo 'Next'. PHP_EOL;
-         print_r($value);
+       function ($total) {
+         echo "Computed user's total balance to: $total\n";  // format in dollars
        }
    );
 }

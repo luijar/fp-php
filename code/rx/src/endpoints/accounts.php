@@ -10,9 +10,13 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Carbon\Carbon;
 
 // Query transactions
-$accounts = DB::table('accounts')->get();
+if(isset($_GET['id'])) {
+    $accounts = DB::table('accounts')->where('user_id', '=', $_GET['id'])->get();
+}
+else {
+    $accounts = DB::table('accounts')->get();
+}
 
-// Seed if empty
 if($accounts->isEmpty()) {
     DB::table('accounts')->insert([
       'user_id'       => 2,
@@ -30,7 +34,6 @@ if($accounts->isEmpty()) {
       'updated_at' => Carbon::now()
     ]);
 }
-
 
 header('Content-type: application/json');
 echo json_encode($accounts);

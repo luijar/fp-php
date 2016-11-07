@@ -10,10 +10,15 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Carbon\Carbon;
 
 // Query users
-$users = DB::table('users')->get();
+if(isset($_GET['id'])) {
+    $users = DB::table('users')->where('id', '=', $_GET['id'])->first();
+}
+else {
+    $users = DB::table('users')->get();
+}
 
 // Seed if empty
-if($users->isEmpty()) {
+if(empty($users) && $users->isEmpty()) {
     DB::table('users')->insert([
       'firstname'  => 'Joe',
       'lastname'   => 'Doe',
