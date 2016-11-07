@@ -1,7 +1,7 @@
 #!/usr/local/bin/php7
 <?php
 /**
- *  Building an aggregator of multiple endpoints using RxPHP
+ *  Building an aggregator of multiple endpoints using RxPHP (refactored version)
  *  @author luijar
  */
 setlocale(LC_MONETARY, 'en_US');
