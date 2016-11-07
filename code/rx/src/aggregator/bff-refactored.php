@@ -29,9 +29,15 @@ function findTotalBalance(int $userId): Subscription {
       )
     ->merge(readAccounts($userId))
     ->reduce('adder', 0)
+    ->catchError(function (\Exception $e) {
+        return Observable::error($e);
+    })
     ->subscribeCallback(
        function ($total) {
          echo "Computed user's total balance to: ". money_format('%i', $total). "\n";
+       },
+       function ($error) {
+         echo "Error!\n";
        }
    );
 }
@@ -59,6 +65,7 @@ function getCurrentStockPrices($stockData): Observable {
   list($symbol, $shares) = $stockData;
   return Promise::toObservable(Promise::resolved(
         curl("http://download.finance.yahoo.com/d/quotes.csv?s=$symbol&f=sa&e=.csv")))
+      ->retry(1)
       ->map('str_getcsv')
       ->map(function ($result) use ($shares) {
           list($symbol, $price) = $result;
@@ -71,6 +78,7 @@ function getCurrentStockPrices($stockData): Observable {
  */
 function readStocks(int $userId): Observable {
   return fetchEndPointStream("http://localhost:8002/stocks?id=$userId")
+     ->retry(1)
      ->map(function ($stock) {
           list($symbol, $shares) = [$stock->symbol, $stock->shares];
           trace("Found stock symbol: $symbol");
@@ -87,6 +95,7 @@ function findUser(int $userId): Observable {
        ->flatMapLatest(function () {
           return fetchEndPointStream("http://localhost:8001/users");
        })
+       ->retry(1)
        ->filter(function ($user) use ($userId) {
           return $user->id === $userId;
        })
@@ -113,6 +122,7 @@ function fetchEndPointStream(string $endpoint): Observable {
     ->flatMap(function ($url) {
          return Promise::toObservable(Promise::resolved(curl($url)));
     })
+    ->retry(1)
     ->map('json_decode')
     ->flatMap(function ($data) {
       return is_array($data) ? Observable::fromArray($data)

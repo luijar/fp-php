@@ -65,6 +65,9 @@ function findTotalBalance(int $userId): Subscription {
              ->map(P::prop('balance'))
       )
     ->reduce('adder', 0)
+    ->catchError(function (\Exception $e) {
+        return Observable::error($e);
+    })
     ->subscribeCallback(
        function ($total) {
          echo "Computed user's total balance to: ". money_format('%i', $total). "\n";
