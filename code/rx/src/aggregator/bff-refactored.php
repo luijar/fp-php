@@ -25,7 +25,7 @@ function findTotalBalance(int $userId): Subscription {
      findUser($userId)
      ->merge(
         readStocks($userId)
-          ->flatMap('fetchStockShares')
+          ->flatMap('getCurrentStockPrices')
       )
     ->merge(readAccounts($userId))
     ->reduce('adder', 0)
@@ -36,6 +36,14 @@ function findTotalBalance(int $userId): Subscription {
    );
 }
 
+findTotalBalance(2);
+
+/*------------------------------------------*/
+/*            Helper streams                */
+/*------------------------------------------*/
+/**
+ * Read accounts (third endpoint)
+ */
 function readAccounts(int $userId): Observable {
   return fetchEndPointStream("http://localhost:8003/accounts?id=$userId")
       ->doOnNext(function ($account) {
@@ -44,26 +52,35 @@ function readAccounts(int $userId): Observable {
      ->map(P::prop('balance'));
 }
 
-function fetchStockShares($stockData): Observable {
-      list($symbol, $shares) = $stockData;
-      return Promise::toObservable(Promise::resolved(
-          curl("http://download.finance.yahoo.com/d/quotes.csv?s=$symbol&f=sa&e=.csv")))
-        ->map('str_getcsv')
-        ->map(function ($result) use ($shares) {
-            list($symbol, $price) = $result;
-            return $price * $shares;
-        });
+/**
+ * Use Yahoo service to fetch current stock prices
+ */
+function getCurrentStockPrices($stockData): Observable {
+  list($symbol, $shares) = $stockData;
+  return Promise::toObservable(Promise::resolved(
+        curl("http://download.finance.yahoo.com/d/quotes.csv?s=$symbol&f=sa&e=.csv")))
+      ->map('str_getcsv')
+      ->map(function ($result) use ($shares) {
+          list($symbol, $price) = $result;
+          return $price * $shares;
+      });
 }
 
-function readStocks($userId) {
+/**
+ * Read stocks stream (second endpoint)
+ */
+function readStocks(int $userId): Observable {
   return fetchEndPointStream("http://localhost:8002/stocks?id=$userId")
-         ->map(function ($stock) {
-              list($symbol, $shares) = [$stock->symbol, $stock->shares];
-              trace("Found stock symbol: $symbol");
-              return [$symbol, $shares];
-         });
+     ->map(function ($stock) {
+          list($symbol, $shares) = [$stock->symbol, $stock->shares];
+          trace("Found stock symbol: $symbol");
+          return [$symbol, $shares];
+     });
 }
 
+/**
+ * Find user stream (first endpoint)
+ */
 function findUser(int $userId): Observable {
     return Observable::just($userId)
        ->map('isValidNumber')
@@ -83,10 +100,9 @@ function findUser(int $userId): Observable {
 /**
  * Tracer function to print DEBUG messages
  */
-function trace(string $message) {
+function trace(string $message): void {
     consoleLog(DEBUG, LEVEL)($message);
 }
-
 
 /**
  * Stream that fetches the contents of  particular URL endpoint and
@@ -103,5 +119,3 @@ function fetchEndPointStream(string $endpoint): Observable {
         : Observable::just($data);
     });
 }
-
-findTotalBalance(2);
