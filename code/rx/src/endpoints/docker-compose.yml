@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+  accounts:
+    depends_on:
+      - db
+    links:
+      - db:rx-db
+    image: my-php7.0
+    restart: always
+    ports:
+      - "8081:80"
+    volumes:
+      - ./accounts:/var/www/html
+      - ../../vendor/:/var/www/html/vendor
+    # Serve users in the system
+  users:
+    depends_on:
+      - db
+    image: my-php7.0
+    links:
+      - db:rx-db
+    restart: always
+    ports:
+      - "8082:80"
+    volumes:
+      - ./users:/var/www/html
+      - ../../vendor/:/var/www/html/vendor
+  # Serve the user's preferred stocks
+  stocks:
+    depends_on:
+      - db
+    image: my-php7.0
+    links:
+      - db:rx-db
+    restart: always
+    ports:
+      - "8083:80"
+    volumes:
+      - ./stocks:/var/www/html
+      - ../../vendor/:/var/www/html/vendor
+  # Instant iate a shared database backing the three microservices (for demo purposes only)
+  db:
+    image: mysql:5.7 # Build ur own mysql and run the import command
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: rx_samples
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+    volumes:
+      - ./mysql-data:/docker-entrypoint-initdb.d

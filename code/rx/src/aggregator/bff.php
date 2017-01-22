@@ -1,13 +1,13 @@
 #!/usr/local/bin/php7
 <?php
 /**
- *  Building an aggregator of multiple endpoints using RxPHP
- *  @author luijar
+ * Building an aggregator of multiple endpoints using RxPHP
+ * Author:  @luijar
  */
+declare(strict_types=1);
 setlocale(LC_MONETARY, 'en_US');
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__. '/../bootstrap.php';
+require_once __DIR__ . '/vendor/autoload.php';
 require_once 'helpers.php';
 
 use Rx\{
@@ -20,6 +20,10 @@ use Rx\{
 const DEBUG = 'on';
 const LEVEL = 'DEBUG';
 
+const ACCOUNTS_SERVICE = 'http://accounts.sunshine.com';
+const USERS_SERVICE = 'http://users.sunshine.com';
+const STOCKS_SERVICE = 'http://stocks.sunshine.com';
+
 function findTotalBalance(int $userId): Subscription {
   return Observable::just($userId)
      ->map('isValidNumber')
@@ -27,7 +31,7 @@ function findTotalBalance(int $userId): Subscription {
      # First end point reached
      # Valid name provided, fetch all users
      ->flatMapLatest(function () {
-        return fetchEndPointStream("http://localhost:8001/users");
+        return fetchEndPointStream(USERS_SERVICE);
      })
      ->filter(function ($user) use ($userId) {
         return $user->id === $userId;
@@ -39,7 +43,7 @@ function findTotalBalance(int $userId): Subscription {
      ->skip(1) // throw away the user ID
      # Second end point reached
      # Fetch stocks add up all of the user's stock prices
-     ->merge(fetchEndPointStream("http://localhost:8002/stocks?id=$userId")
+     ->merge(fetchEndPointStream(STOCKS_SERVICE. "?id=$userId")
             ->map(function ($stock) {
                  list($symbol, $shares) = [$stock->symbol, $stock->shares];
                  trace("Found stock symbol: $symbol");
@@ -56,9 +60,9 @@ function findTotalBalance(int $userId): Subscription {
                     });
             })
       )
-    # Thirdf end point reached
+    # Third end point reached
     # Fetch accounts add up all of the user's accounts
-    ->merge(fetchEndPointStream("http://localhost:8003/accounts?id=$userId")
+    ->merge(fetchEndPointStream(ACCOUNTS_SERVICE. "?id=$userId")
               ->doOnNext(function ($account) {
                  trace("Found account of type: $account->account_type");
               })

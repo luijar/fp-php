@@ -1,8 +1,9 @@
 <?php
 /**
  * Helper functions
- * @author luijar
+ * Author:  @luijar
  */
+declare(strict_types=1);
 
 // Validate number
 function isValidNumber(float $val): bool {
@@ -16,6 +17,9 @@ function curl(string $url): string {
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_URL, $url);
   $result = curl_exec($ch);
+  if($result === false) {
+    echo 'Curl error: ' . curl_error($ch);
+  }
   curl_close($ch);
   return $result;
 }
@@ -33,3 +37,6 @@ function consoleLog(string $switch, string $level): callable {
     }
   };
 }
+
+$result = curl('http://accounts.sunshine.com');
+echo 'Result is '. $result;
