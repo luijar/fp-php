@@ -20,6 +20,10 @@ use Rx\{
 const DEBUG = 'on';
 const LEVEL = 'DEBUG';
 
+const ACCOUNTS_SERVICE = 'http://accounts.sunshine.com';
+const USERS_SERVICE = 'http://users.sunshine.com';
+const STOCKS_SERVICE = 'http://stocks.sunshine.com';
+
 function findTotalBalance(int $userId): Subscription {
   return
      findUser($userId)
@@ -51,7 +55,7 @@ findTotalBalance(2);
  * Read accounts (third endpoint)
  */
 function readAccounts(int $userId): Observable {
-  return fetchEndPointStream("http://localhost:8003/accounts?id=$userId")
+  return fetchEndPointStream(ACCOUNTS_SERVICE . "?id=$userId")
       ->doOnNext(function ($account) {
          trace("Found account of type: $account->account_type");
       })
@@ -77,7 +81,7 @@ function getCurrentStockPrices($stockData): Observable {
  * Read stocks stream (second endpoint)
  */
 function readStocks(int $userId): Observable {
-  return fetchEndPointStream("http://localhost:8002/stocks?id=$userId")
+  return fetchEndPointStream(STOCKS_SERVICE . "?id=$userId")
      ->retry(1)
      ->map(function ($stock) {
           list($symbol, $shares) = [$stock->symbol, $stock->shares];
@@ -93,7 +97,7 @@ function findUser(int $userId): Observable {
     return Observable::just($userId)
        ->map('isValidNumber')
        ->flatMapLatest(function () {
-          return fetchEndPointStream("http://localhost:8001/users");
+          return fetchEndPointStream(USERS_SERVICE .  "/users");
        })
        ->retry(1)
        ->filter(function ($user) use ($userId) {

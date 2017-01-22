@@ -38,5 +38,5 @@ function consoleLog(string $switch, string $level): callable {
   };
 }
 
-$result = curl('http://accounts.sunshine.com');
-echo 'Result is '. $result;
+// $result = curl('http://accounts.sunshine.com');
+// echo 'Result is '. $result;
