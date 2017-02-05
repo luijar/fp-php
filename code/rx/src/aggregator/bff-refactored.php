@@ -1,4 +1,4 @@
-#!/usr/local/bin/php7
+#!/usr/local/bin/php
 <?php
 /**
  * Building an aggregator of multiple endpoints using RxPHP (refactored version)

@@ -1,4 +1,4 @@
-#!/usr/local/bin/php7
+#!/usr/local/bin/php
 <?php
 /**
  * Building an aggregator of multiple endpoints using RxPHP
@@ -24,10 +24,35 @@ const ACCOUNTS_SERVICE = 'http://accounts.sunshine.com';
 const USERS_SERVICE = 'http://users.sunshine.com';
 const STOCKS_SERVICE = 'http://stocks.sunshine.com';
 
+/**
+ * fetchEndPointStream :: String -> Observable
+ * Stream that fetches the contents of  particular URL endpoint and
+ * wraps it in an array
+ */
+function fetchEndPointStream(string $endpoint): Observable {
+  return Observable::just($endpoint)
+    ->doOnNext(function ($endpoint) {
+       trace("Querying ${endpoint} ...");
+    })
+    ->flatMap(function ($url) {
+         return Promise::toObservable(Promise::resolved(curl($url)));
+    })
+    ->doOnNext(function () {
+       trace("Decoding JSON ...");
+    })
+    ->map('json_decode')
+    ->flatMap(function ($data) {
+      return is_array($data) ? Observable::fromArray($data)
+        : Observable::just($data);
+    });
+}
+
 function findTotalBalance(int $userId): Subscription {
   return Observable::just($userId)
+    ->doOnNext(function ($userId) {
+       trace("Validating  user ID: $userId ...");
+    })
      ->map('isValidNumber')
-
      # First end point reached
      # Valid name provided, fetch all users
      ->flatMapLatest(function () {
@@ -40,14 +65,17 @@ function findTotalBalance(int $userId): Subscription {
      ->doOnNext(function ($userId) {
         trace("Found user with ID: $userId");
      })
-     ->skip(1) // throw away the user ID
+     ->skip(1)
      # Second end point reached
      # Fetch stocks add up all of the user's stock prices
-     ->merge(fetchEndPointStream(STOCKS_SERVICE. "?id=$userId")
+     ->merge(fetchEndPointStream(STOCKS_SERVICE. "?userid=$userId")
             ->map(function ($stock) {
                  list($symbol, $shares) = [$stock->symbol, $stock->shares];
                  trace("Found stock symbol: $symbol");
                  return [$symbol, $shares];
+            })
+            ->doOnNext(function () {
+               trace("Querying External Yahoo Service ...");
             })
             ->flatMap(function ($stockData) {
                   list($symbol, $shares) = $stockData;
@@ -68,6 +96,9 @@ function findTotalBalance(int $userId): Subscription {
               })
              ->map(P::prop('balance'))
       )
+    ->doOnNext(function () {
+       trace("Aggregating total balance...");
+    })
     ->reduce('adder', 0)
     ->catchError(function (\Exception $e) {
         return Observable::error($e);
@@ -75,6 +106,12 @@ function findTotalBalance(int $userId): Subscription {
     ->subscribeCallback(
        function ($total) {
          echo "Computed user's total balance to: ". money_format('%i', $total). "\n";
+       },
+       function ($error) {
+         echo "Oh oh! $error \n";
+       },
+       function () {
+         echo "Done! \n";
        }
    );
 }
@@ -84,23 +121,6 @@ function findTotalBalance(int $userId): Subscription {
  */
 function trace(string $message) {
     consoleLog(DEBUG, LEVEL)($message);
-}
-
-
-/**
- * Stream that fetches the contents of  particular URL endpoint and
- * wraps it in an array
- */
-function fetchEndPointStream(string $endpoint): Observable {
-  return Observable::just($endpoint)
-    ->flatMap(function ($url) {
-         return Promise::toObservable(Promise::resolved(curl($url)));
-    })
-    ->map('json_decode')
-    ->flatMap(function ($data) {
-      return is_array($data) ? Observable::fromArray($data)
-        : Observable::just($data);
-    });
 }
 
 findTotalBalance(2);
